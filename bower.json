@@ -6,7 +6,22 @@
     "https://github.com/Naimikan/angular-mapboxgl-directive/graphs/contributors"
   ],
   "description": "An AngularJS directive for Mapbox GL",
-  "main": "dist/angular-mapboxgl-directive.min.js",
+  "main": [
+    "dist/mapbox-gl-directions.css",
+    "dist/mapbox-gl-compare.css",
+    "dist/mapbox-gl-draw.css",
+    "dist/angular-mapboxgl-directive.css",
+    "dist/mapbox-gl.js",
+    "dist/mapbox-gl-compare.js",
+    "dist/mapbox-gl-directions.js",
+    "dist/mapbox-gl-language.js",
+    "dist/mapbox-gl-draw.js",
+    "dist/turf.min.js",
+    "dist/mapbox-gl-geocoder.js",
+    "dist/mapbox-gl-geocoder.css",
+    "dist/mapbox-gl-circle.min.js",
+    "dist/angular-mapboxgl-directive.min.js"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Naimikan/angular-mapboxgl-directive.git"
