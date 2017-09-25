@@ -1,0 +1,14 @@
+{
+	"dist": {
+    "expand": true,
+    "cwd": "vendor",
+    "src": "*",
+    "dest": "dist"
+	},
+  "public": {
+    "expand": true,
+    "cwd": "vendor",
+    "src": "*",
+    "dest": "public/lib"
+  }
+}

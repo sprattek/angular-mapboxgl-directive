@@ -17,6 +17,8 @@
   "smarttabs": true,
   "globals": {
     "angular": false,
-    "mapboxgl": false
+    "mapboxgl": false,
+    "MapboxCircle": false,
+    "MapboxDraw": false
   }
 }

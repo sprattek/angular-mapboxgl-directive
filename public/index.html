@@ -2,93 +2,43 @@
   <head>
     <title>Test Server - angular-mapboxgl-directive</title>
 
-    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.css" rel="stylesheet" />
-    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v3.1.2/mapbox-gl-directions.css' type='text/css' />
-    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.css' type='text/css' />
+    <link href="lib/mapbox-gl.css" rel="stylesheet" />
+    <link rel='stylesheet' href='lib/mapbox-gl-directions.css' type='text/css' />
+    <link rel='stylesheet' href='lib/mapbox-gl-compare.css' type='text/css' />
+    <link rel='stylesheet' href='lib/mapbox-gl-draw.css' type='text/css' />
+
     <link href="css/angular-mapboxgl-directive.css" rel="stylesheet" />
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.js"></script>
-    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.js'></script>
-    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v3.1.2/mapbox-gl-directions.js'></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-language/v0.9.0/mapbox-gl-language.js"></script>
+    <script src="lib/mapbox-gl.js"></script>
+    <script src='lib/mapbox-gl-compare.js'></script>
+    <script src='lib/mapbox-gl-directions.js'></script>
+    <script src="lib/mapbox-gl-language.js"></script>
+    <script src='lib/mapbox-gl-draw.js'></script>
 
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/Turf.js/3.0.14/turf.min.js'></script>
+    <script src='lib/turf.min.js'></script>
 
-    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.0.1/mapbox-gl-geocoder.js'></script>
-    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.0.1/mapbox-gl-geocoder.css' type='text/css' />
+    <script src='lib/mapbox-gl-geocoder.js'></script>
+    <link rel='stylesheet' href='lib/mapbox-gl-geocoder.css' type='text/css' />
 
+    <script src="lib/mapbox-gl-circle.min.js"></script>
     <script src="lib/angular-mapboxgl-directive.js"></script>
 
     <script src="app.js"></script>
   </head>
   <body ng-controller="IndexController" style="margin: 0;">
-    <!-- <div ng-repeat="eachMap in maps">
-      <button type="button" class="btn btn-success" ng-click="addMarker(eachMap)">Add Marker</button>
-      <div
-        mapboxgl
-        id="{{eachMap.id}}"
-        gl-controls="eachMap.controls"
-        gl-sources="eachMap.sources"
-        gl-layers="eachMap.layers">
-      </div>
-    </div> -->
-
-    <!-- <div
-      mapboxgl
-      gl-controls="glControls"
-      gl-style="glStyle"
-      gl-center="glCenter"
-      gl-markers="glMarkers"
-      gl-zoom="glZoom"
-      gl-popups="glPopups"
-      render-world-copies="false"
-      language="es"
-      rtl-enabled="true"
-      width="{{glWidth}}"
-      height="{{glHeight}}"></div> -->
 
       <mapboxgl
-        gl-style="glStyle"
-        id="<map_id>"
-        persistent="true"
         gl-center="[-77.04, 38.907]"
         gl-min-zoom="11.15"
         gl-max-zoom="18"
-        gl-layers="testLayers"
-        gl-sources="testSources">
+        gl-circles="glCircles"
+        gl-markers="glMarkers"
+        gl-floorplans="glFloorplanss"
+        gl-style="glStyle"
+        gl-controls="glControls"
+        gl-layer-controls="glLayerControls">
       </mapboxgl>
 
-    <!-- <div mapboxgl-compare compare-settings="{ mousemove: false }">
-      <div
-        mapboxgl
-        gl-controls="glControls"
-        gl-style="glStyle"
-        gl-center="glCenter"
-        gl-sources="glSources"
-        gl-layers="glLayers"
-        render-world-copies="false"
-        height="{{glHeight}}"></div>
-
-      <div
-        mapboxgl
-        gl-style="glStyle2"
-        gl-center="glCenter"
-        gl-zoom="glZoom"
-        height="{{glHeight}}"></div>
-    </div> -->
-
-
-    <!-- <div
-      mapboxgl
-      id="map1"
-      gl-style="glStyle"
-      height="{{glHeight}}"></div>
-
-    <div
-      mapboxgl
-      id="map2"
-      gl-style="glStyle2"
-      height="{{glHeight}}"></div> -->
   </body>
 </html>

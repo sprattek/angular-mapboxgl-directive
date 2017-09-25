@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.0 2017-08-29
+*  angular-mapboxgl-directive 0.40.0 2017-09-25
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -251,39 +251,39 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
 
 
       /*scope.$watch(function () { return scope.controlsAvailables; }, function (newValue, oldValue) {
-        if (newValue !== void 0) {
-          // Custom Control DrawGl
-          if (newValue.drawControl !== void 0 && newValue.drawControl.enabled !== void 0 && newValue.drawControl.enabled) {
-            if (mapboxgl.DrawGl !== void 0) {
-              scope.mapboxGlControls.drawGl = new mapboxgl.DrawGl({
-                position: newValue.drawControl.position || 'top-left',
-                drawOptions: newValue.drawControl.drawOptions ? {
-                  polyline: newValue.drawControl.drawOptions.polyline ? newValue.drawControl.drawOptions.polyline : false,
-                  polygon: newValue.drawControl.drawOptions.polygon ? newValue.drawControl.drawOptions.polygon : false,
-                  rectangle: newValue.drawControl.drawOptions.rectangle ? newValue.drawControl.drawOptions.rectangle : false,
-                  circle: newValue.drawControl.drawOptions.circle ? newValue.drawControl.drawOptions.circle : false,
-                  marker: newValue.drawControl.drawOptions.marker ? newValue.drawControl.drawOptions.marker : false,
-                  edit: newValue.drawControl.drawOptions.edit ? newValue.drawControl.drawOptions.edit : true,
-                  trash: newValue.drawControl.drawOptions.trash ? newValue.drawControl.drawOptions.trash : true
-                } : {
-                  polyline: true,
-                  polygon: true,
-                  rectangle: true,
-                  circle: true,
-                  marker: true,
-                  edit: true,
-                  trash: true
-                },
-                distanceUnit: mapboxgl.DrawGl.DISTANCE_UNITS.meters
-              });
+       if (newValue !== void 0) {
+       // Custom Control DrawGl
+       if (newValue.drawControl !== void 0 && newValue.drawControl.enabled !== void 0 && newValue.drawControl.enabled) {
+       if (mapboxgl.DrawGl !== void 0) {
+       scope.mapboxGlControls.drawGl = new mapboxgl.DrawGl({
+       position: newValue.drawControl.position || 'top-left',
+       drawOptions: newValue.drawControl.drawOptions ? {
+       polyline: newValue.drawControl.drawOptions.polyline ? newValue.drawControl.drawOptions.polyline : false,
+       polygon: newValue.drawControl.drawOptions.polygon ? newValue.drawControl.drawOptions.polygon : false,
+       rectangle: newValue.drawControl.drawOptions.rectangle ? newValue.drawControl.drawOptions.rectangle : false,
+       circle: newValue.drawControl.drawOptions.circle ? newValue.drawControl.drawOptions.circle : false,
+       marker: newValue.drawControl.drawOptions.marker ? newValue.drawControl.drawOptions.marker : false,
+       edit: newValue.drawControl.drawOptions.edit ? newValue.drawControl.drawOptions.edit : true,
+       trash: newValue.drawControl.drawOptions.trash ? newValue.drawControl.drawOptions.trash : true
+       } : {
+       polyline: true,
+       polygon: true,
+       rectangle: true,
+       circle: true,
+       marker: true,
+       edit: true,
+       trash: true
+       },
+       distanceUnit: mapboxgl.DrawGl.DISTANCE_UNITS.meters
+       });
 
-              scope.mapboxGlMap.addControl(scope.mapboxGlControls.drawGl);
-            } else {
-              throw new Error('mapboxgl.DrawGl plugin is not included.');
-            }
-          }
-        }
-      }); */
+       scope.mapboxGlMap.addControl(scope.mapboxGlControls.drawGl);
+       } else {
+       throw new Error('mapboxgl.DrawGl plugin is not included.');
+       }
+       }
+       }
+       }); */
     }).catch(function (error) {
 
     });
@@ -303,7 +303,9 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
       glInteractive: '=',
       glLayers: '=',
       glLights: '=',
+      glCircles: '=',
       glMarkers: '=',
+      glFloorplans: '=',
       glMaxBounds: '=',
       glMaxZoom: '=',
       glMinZoom: '=',
@@ -312,9 +314,10 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
       glSources: '=',
       glStyle: '=',
       glVideo: '=',
-      glZoom: '='
+      glZoom: '=',
+      glLayerControls: '='
     },
-    template: '<div class="angular-mapboxgl-map"><div class="angular-mapboxgl-map-loader"><div class="spinner"><div class="double-bounce"></div><div class="double-bounce delayed"></div></div></div></div>',
+    template: '<div class="angular-mapboxgl-map"><div class="angular-mapboxgl-map-loader"><div class="spinner"><div class="double-bounce"></div><div class="double-bounce delayed"></div></div></div><div class="layer-controls"><a href="javascript:;"></a><ul id="mapbox-layer-controls"></ul></div>',
     controller: mapboxGlDirectiveController,
     link: mapboxGlDirectiveLink
   };
@@ -552,6 +555,178 @@ angular.module('mapboxgl-directive').factory('AnimationsManager', ['$window', '$
   };
 
   return AnimationsManager;
+}]);
+
+angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
+  function CirclesManager (mapInstance) {
+    this.circlesCreated = [];
+    this.mapInstance = mapInstance;
+  }
+
+  CirclesManager.prototype.createCircleByObject = function (object) {
+    Utils.checkObjects([
+      {
+        name: 'Map',
+        object: this.mapInstance
+      }, {
+        name: 'Object',
+        object: object,
+        attributes: ['coordinates', 'radius', 'options', 'id']
+      }
+    ]);
+
+    var elementId = object.id;
+    elementId = angular.isDefined(elementId) && elementId !== null ? elementId : Utils.generateGUID();
+
+    object.id = elementId;
+
+    var circleOptions = object.options || {};
+
+    var circle = new MapboxCircle(object.coordinates, object.radius, circleOptions);
+
+    circle.addTo(this.mapInstance);
+
+    this.circlesCreated.push({
+      circleId: elementId,
+      circleInstance: circle
+    });
+  };
+
+  CirclesManager.prototype.removeAllCirclesCreated = function () {
+    this.circlesCreated.map(function (eachCircle) {
+      eachCircle.circleInstance.remove();
+    });
+
+    this.circlesCreated = [];
+  };
+
+  return CirclesManager;
+}]);
+
+angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
+  function FloorplansManager (mapInstance) {
+    this.floorplansCreated = [];
+    this.mapInstance = mapInstance;
+  }
+
+  FloorplansManager.prototype.createFloorplanByObject = function (object, mapboxglDrawInstance) {
+    Utils.checkObjects([
+      {
+        name: 'Map',
+        object: this.mapInstance
+      }, {
+        name: 'Object',
+        object: object,
+        attributes: ['coordinates', 'url', 'id']
+      }
+    ]);
+
+    var elementId = object.id;
+    elementId = angular.isDefined(elementId) && elementId !== null ? elementId : Utils.generateGUID();
+
+    object.id = elementId;
+
+    const id = 'floorplan-'+elementId;
+    const sourceId = 'floorplan-source-'+elementId;
+
+    const c = object.coordinates;
+
+    const options = {
+      type: 'image',
+      url: object.url,
+      coordinates: [c[1], c[3], c[2], c[0]]
+    };
+
+    this.mapInstance.addSource(sourceId, options);
+
+    this.mapInstance.addLayer({
+      id: id,
+      source: sourceId,
+      type: 'raster',
+      layout: {
+        'visibility': 'visible'
+      },
+      paint: {
+        "raster-opacity": 0.65
+      }
+    }, 'directions-route-line');
+
+    this.floorplansCreated.push({
+      id: id,
+      sourceId: sourceId,
+      mapInstance: this.mapInstance
+    });
+
+    if (object.editable) {
+      var feature = {
+        id: id,
+        type: 'Feature',
+        properties: {
+          layer_id: id,
+          source_id: sourceId,
+          object: object
+        },
+        geometry: { type: 'Polygon', coordinates: [[c[1], c[3], c[2], c[0], c[1]]] }
+      };
+      var featureIds = mapboxglDrawInstance.add(feature);
+
+      mapboxglDrawInstance.changeMode('direct_select', {
+        featureId: featureIds[0]
+      });
+
+      this.mapInstance.on('draw.update', function (e) {
+        const drawing = e.features[0];
+        const map = e.target;
+
+        if (map.getSource(drawing.properties.source_id)) {
+          map.removeSource(drawing.properties.source_id);
+        }
+
+        if (map.getLayer(drawing.properties.layer_id)) {
+          map.removeLayer(drawing.properties.layer_id);
+        }
+
+        const c = drawing.geometry.coordinates[0];
+
+        const options = {
+          type: 'image',
+          url: drawing.properties.object.url,
+          coordinates: [c[0], c[1], c[2], c[3]]
+        };
+
+        map.addSource(drawing.properties.source_id, options);
+
+        map.addLayer({
+          id: drawing.properties.layer_id,
+          source: drawing.properties.source_id,
+          type: 'raster',
+          layout: {
+            'visibility': 'visible'
+          },
+          paint: {
+            "raster-opacity": 0.65
+          }
+        }, 'directions-route-line');
+      });
+    }
+
+  };
+
+  FloorplansManager.prototype.removeAllFloorplansCreated = function () {
+    this.floorplansCreated.map(function (eachFloorplan) {
+      if (eachFloorplan.mapInstance.getSource(eachFloorplan.sourceId)) {
+        eachFloorplan.mapInstance.removeSource(eachFloorplan.sourceId);
+      }
+
+      if (eachFloorplan.mapInstance.getLayer(eachFloorplan.id)) {
+        eachFloorplan.mapInstance.removeLayer(eachFloorplan.id);
+      }
+    });
+
+    this.floorplansCreated = [];
+  };
+
+  return FloorplansManager;
 }]);
 
 angular.module('mapboxgl-directive').factory('LayersManager', ['Utils', 'mapboxglConstants', function (Utils, mapboxglConstants) {
@@ -1727,6 +1902,55 @@ angular.module('mapboxgl-directive').directive('glCenter', ['Utils', 'mapboxglCo
 	return directive;
 }]);
 
+angular.module('mapboxgl-directive').directive('glCircles', ['CirclesManager', function (CirclesManager) {
+  function mapboxGlCirclesDirectiveLink (scope, element, attrs, controller) {
+    if (!controller) {
+			throw new Error('Invalid angular-mapboxgl-directive controller');
+		}
+
+		var mapboxglScope = controller.getMapboxGlScope();
+
+    var circlesWatched = function (circles) {
+      if (angular.isDefined(circles)) {
+        scope.circleManager.removeAllCirclesCreated();
+
+        if (Object.prototype.toString.call(circles) === Object.prototype.toString.call({})) {
+          scope.circleManager.createCircleByObject(circles);
+        } else if (Object.prototype.toString.call(circles) === Object.prototype.toString.call([])) {
+          circles.map(function (eachCircle) {
+            scope.circleManager.createCircleByObject(eachCircle);
+          });
+        } else {
+          throw new Error('Invalid circle parameter');
+        }
+      }
+    };
+
+    controller.getMap().then(function (map) {
+      scope.circleManager = new CirclesManager(map);
+
+      mapboxglScope.$watchCollection('glCircles', function (circles) {
+        circlesWatched(circles);
+      });
+    });
+
+    scope.$on('$destroy', function () {
+      // ToDo: remove all markers
+      scope.circleManager.removeAllCirclesCreated();
+    });
+  }
+
+  var directive = {
+		restrict: 'A',
+		scope: false,
+		replace: false,
+		require: '?^mapboxgl',
+		link: mapboxGlCirclesDirectiveLink
+	};
+
+	return directive;
+}]);
+
 angular.module('mapboxgl-directive').directive('glClasses', [function () {
 	function mapboxGlClassesDirectiveLink (scope, element, attrs, controller) {
 		if (!controller) {
@@ -1927,6 +2151,8 @@ angular.module('mapboxgl-directive').directive('glControls', ['$rootScope', 'Uti
 							console.error('\'custom\' must be an array');
 						}
           }
+
+					$rootScope.$broadcast('mapboxglMap:controlsRendered', _controlsCreated);
         }
 			});
 		});
@@ -1989,6 +2215,60 @@ angular.module('mapboxgl-directive').directive('glFilter', [function () {
 	};
 
 	return directive;
+}]);
+
+angular.module('mapboxgl-directive').directive('glFloorplans', ['FloorplansManager', function (FloorplansManager) {
+  function mapboxGlFloorplansDirectiveLink (scope, element, attrs, controller) {
+    if (!controller) {
+      throw new Error('Invalid angular-mapboxgl-directive controller');
+    }
+
+    var mapboxglScope = controller.getMapboxGlScope();
+
+    var floorplansWatched = function (floorplans, mapboxglDrawInstance) {
+      if (angular.isDefined(floorplans)) {
+        scope.floorplanManager.removeAllFloorplansCreated();
+
+        if (Object.prototype.toString.call(floorplans) === Object.prototype.toString.call({})) {
+          scope.floorplanManager.createFloorplanByObject(floorplans, mapboxglDrawInstance);
+        } else if (Object.prototype.toString.call(floorplans) === Object.prototype.toString.call([])) {
+          floorplans.map(function (eachFloorplan) {
+            scope.floorplanManager.createFloorplanByObject(eachFloorplan, mapboxglDrawInstance);
+          });
+        } else {
+          throw new Error('Invalid circle parameter');
+        }
+      }
+    };
+
+    controller.getMap().then(function (map) {
+      scope.floorplanManager = new FloorplansManager(map);
+      scope.$on('mapboxglMap:controlsRendered', function (event, controlsRendered) {
+        if (controlsRendered.draw) {
+          var mapboxglDrawInstance = controlsRendered.draw.control;
+
+          mapboxglScope.$watchCollection('glFloorplans', function (floorplans) {
+            floorplansWatched(floorplans, mapboxglDrawInstance);
+          });
+        }
+      });
+    });
+
+    scope.$on('$destroy', function () {
+      // ToDo: remove all markers
+      scope.floorplanManager.removeAllFloorplansCreated();
+    });
+  }
+
+  var directive = {
+    restrict: 'A',
+    scope: false,
+    replace: false,
+    require: '?^mapboxgl',
+    link: mapboxGlFloorplansDirectiveLink
+  };
+
+  return directive;
 }]);
 
 angular.module('mapboxgl-directive').directive('glHandlers', [function () {
@@ -2131,6 +2411,91 @@ angular.module('mapboxgl-directive').directive('glInteractive', [function () {
 		replace: false,
 		require: '?^mapboxgl',
 		link: mapboxGlInteractiveDirectiveLink
+  };
+
+  return directive;
+}]);
+
+angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
+  function mapboxGlLayerControlDirectiveLink (scope, element, attrs, controller) {
+    if (!controller) {
+      throw new Error('Invalid angular-mapboxgl-directive controller');
+    }
+
+    var mapboxglScope = controller.getMapboxGlScope();
+    var controls = mapboxglScope.glLayerControls;
+    var placeholder = document.getElementById('mapbox-layer-controls');
+    var layersCopy = {};
+
+    angular.forEach(controls, function(control){
+      var list_item = document.createElement('li');
+      var link = document.createElement('a');
+      list_item.appendChild(link);
+      link.href = '#';
+      link.className = 'active';
+      link.textContent = control.name;
+      link.id = control.type;
+      layersCopy[control.type] = scope[control.type];
+
+      link.onclick = function (e) {
+        var clickedLayer = this.textContent;
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (scope[this.id].length > 0) {
+          this.className = '';
+          scope[this.id] = [];
+          scope.$apply();
+        } else {
+          this.className = 'active';
+          scope[this.id] = layersCopy[this.id];
+          scope.$apply();
+        }
+      };
+
+      placeholder.appendChild(list_item);
+    });
+
+    if (mapboxglScope.glFloorplans.length > 0) {
+      controller.getMap().then(function (map) {
+        angular.forEach(mapboxglScope.glFloorplans, function(control){
+          var list_item = document.createElement('li');
+          var link = document.createElement('a');
+          list_item.appendChild(link);
+          link.href = '#';
+          link.className = 'active';
+          link.textContent = control.name;
+          link.id = control.id;
+
+          link.onclick = function (e) {
+            const id = 'floorplan-'+this.id;
+            e.preventDefault();
+            e.stopPropagation();
+
+            var visibility = map.getLayoutProperty(id, 'visibility');
+
+            if (visibility === 'visible') {
+              map.setLayoutProperty(id, 'visibility', 'none');
+              this.className = '';
+            } else {
+              this.className = 'active';
+              map.setLayoutProperty(id, 'visibility', 'visible');
+            }
+          };
+
+          placeholder.appendChild(list_item);
+        });
+      });
+    }
+
+  }
+
+  var directive = {
+    restrict: 'A',
+    scope: false,
+    replace: false,
+    require: '?^mapboxgl',
+    link: mapboxGlLayerControlDirectiveLink
   };
 
   return directive;

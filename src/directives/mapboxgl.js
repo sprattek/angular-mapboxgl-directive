@@ -243,39 +243,39 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
 
 
       /*scope.$watch(function () { return scope.controlsAvailables; }, function (newValue, oldValue) {
-        if (newValue !== void 0) {
-          // Custom Control DrawGl
-          if (newValue.drawControl !== void 0 && newValue.drawControl.enabled !== void 0 && newValue.drawControl.enabled) {
-            if (mapboxgl.DrawGl !== void 0) {
-              scope.mapboxGlControls.drawGl = new mapboxgl.DrawGl({
-                position: newValue.drawControl.position || 'top-left',
-                drawOptions: newValue.drawControl.drawOptions ? {
-                  polyline: newValue.drawControl.drawOptions.polyline ? newValue.drawControl.drawOptions.polyline : false,
-                  polygon: newValue.drawControl.drawOptions.polygon ? newValue.drawControl.drawOptions.polygon : false,
-                  rectangle: newValue.drawControl.drawOptions.rectangle ? newValue.drawControl.drawOptions.rectangle : false,
-                  circle: newValue.drawControl.drawOptions.circle ? newValue.drawControl.drawOptions.circle : false,
-                  marker: newValue.drawControl.drawOptions.marker ? newValue.drawControl.drawOptions.marker : false,
-                  edit: newValue.drawControl.drawOptions.edit ? newValue.drawControl.drawOptions.edit : true,
-                  trash: newValue.drawControl.drawOptions.trash ? newValue.drawControl.drawOptions.trash : true
-                } : {
-                  polyline: true,
-                  polygon: true,
-                  rectangle: true,
-                  circle: true,
-                  marker: true,
-                  edit: true,
-                  trash: true
-                },
-                distanceUnit: mapboxgl.DrawGl.DISTANCE_UNITS.meters
-              });
+       if (newValue !== void 0) {
+       // Custom Control DrawGl
+       if (newValue.drawControl !== void 0 && newValue.drawControl.enabled !== void 0 && newValue.drawControl.enabled) {
+       if (mapboxgl.DrawGl !== void 0) {
+       scope.mapboxGlControls.drawGl = new mapboxgl.DrawGl({
+       position: newValue.drawControl.position || 'top-left',
+       drawOptions: newValue.drawControl.drawOptions ? {
+       polyline: newValue.drawControl.drawOptions.polyline ? newValue.drawControl.drawOptions.polyline : false,
+       polygon: newValue.drawControl.drawOptions.polygon ? newValue.drawControl.drawOptions.polygon : false,
+       rectangle: newValue.drawControl.drawOptions.rectangle ? newValue.drawControl.drawOptions.rectangle : false,
+       circle: newValue.drawControl.drawOptions.circle ? newValue.drawControl.drawOptions.circle : false,
+       marker: newValue.drawControl.drawOptions.marker ? newValue.drawControl.drawOptions.marker : false,
+       edit: newValue.drawControl.drawOptions.edit ? newValue.drawControl.drawOptions.edit : true,
+       trash: newValue.drawControl.drawOptions.trash ? newValue.drawControl.drawOptions.trash : true
+       } : {
+       polyline: true,
+       polygon: true,
+       rectangle: true,
+       circle: true,
+       marker: true,
+       edit: true,
+       trash: true
+       },
+       distanceUnit: mapboxgl.DrawGl.DISTANCE_UNITS.meters
+       });
 
-              scope.mapboxGlMap.addControl(scope.mapboxGlControls.drawGl);
-            } else {
-              throw new Error('mapboxgl.DrawGl plugin is not included.');
-            }
-          }
-        }
-      }); */
+       scope.mapboxGlMap.addControl(scope.mapboxGlControls.drawGl);
+       } else {
+       throw new Error('mapboxgl.DrawGl plugin is not included.');
+       }
+       }
+       }
+       }); */
     }).catch(function (error) {
 
     });
@@ -295,7 +295,9 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
       glInteractive: '=',
       glLayers: '=',
       glLights: '=',
+      glCircles: '=',
       glMarkers: '=',
+      glFloorplans: '=',
       glMaxBounds: '=',
       glMaxZoom: '=',
       glMinZoom: '=',
@@ -304,9 +306,10 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
       glSources: '=',
       glStyle: '=',
       glVideo: '=',
-      glZoom: '='
+      glZoom: '=',
+      glLayerControls: '='
     },
-    template: '<div class="angular-mapboxgl-map"><div class="angular-mapboxgl-map-loader"><div class="spinner"><div class="double-bounce"></div><div class="double-bounce delayed"></div></div></div></div>',
+    template: '<div class="angular-mapboxgl-map"><div class="angular-mapboxgl-map-loader"><div class="spinner"><div class="double-bounce"></div><div class="double-bounce delayed"></div></div></div><div class="layer-controls"><a href="javascript:;"></a><ul id="mapbox-layer-controls"></ul></div>',
     controller: mapboxGlDirectiveController,
     link: mapboxGlDirectiveLink
   };
