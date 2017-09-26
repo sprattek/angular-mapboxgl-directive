@@ -63,10 +63,16 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
         },
         geometry: { type: 'Polygon', coordinates: [[c[1], c[3], c[2], c[0], c[1]]] }
       };
-      var featureIds = mapboxglDrawInstance.add(feature);
+      var drawAdded = false;
 
-      mapboxglDrawInstance.changeMode('direct_select', {
-        featureId: featureIds[0]
+      this.mapInstance.on('render', function(data) {
+        if(data.target.loaded() && !drawAdded) {
+          var featureIds = mapboxglDrawInstance.add(feature);
+          mapboxglDrawInstance.changeMode('direct_select', {
+            featureId: featureIds[0]
+          });
+          drawAdded = true;
+        }
       });
 
       this.mapInstance.on('draw.update', function (e) {

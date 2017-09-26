@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.0 2017-09-25
+*  angular-mapboxgl-directive 0.40.0 2017-09-26
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -668,10 +668,16 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
         },
         geometry: { type: 'Polygon', coordinates: [[c[1], c[3], c[2], c[0], c[1]]] }
       };
-      var featureIds = mapboxglDrawInstance.add(feature);
+      var drawAdded = false;
 
-      mapboxglDrawInstance.changeMode('direct_select', {
-        featureId: featureIds[0]
+      this.mapInstance.on('render', function(data) {
+        if(data.target.loaded() && !drawAdded) {
+          var featureIds = mapboxglDrawInstance.add(feature);
+          mapboxglDrawInstance.changeMode('direct_select', {
+            featureId: featureIds[0]
+          });
+          drawAdded = true;
+        }
       });
 
       this.mapInstance.on('draw.update', function (e) {
@@ -2458,6 +2464,7 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
 
     if (mapboxglScope.glFloorplans.length > 0) {
       controller.getMap().then(function (map) {
+        console.log(map);
         angular.forEach(mapboxglScope.glFloorplans, function(control){
           var list_item = document.createElement('li');
           var link = document.createElement('a');

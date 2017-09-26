@@ -40,6 +40,7 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
 
     if (mapboxglScope.glFloorplans.length > 0) {
       controller.getMap().then(function (map) {
+        console.log(map);
         angular.forEach(mapboxglScope.glFloorplans, function(control){
           var list_item = document.createElement('li');
           var link = document.createElement('a');
