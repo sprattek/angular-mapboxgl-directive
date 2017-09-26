@@ -77,37 +77,39 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
 
       this.mapInstance.on('draw.update', function (e) {
         const drawing = e.features[0];
-        const map = e.target;
+        if (drawing.properties.object && drawing.properties.object.editable) {
+          const map = e.target;
 
-        if (map.getSource(drawing.properties.source_id)) {
-          map.removeSource(drawing.properties.source_id);
-        }
-
-        if (map.getLayer(drawing.properties.layer_id)) {
-          map.removeLayer(drawing.properties.layer_id);
-        }
-
-        const c = drawing.geometry.coordinates[0];
-
-        const options = {
-          type: 'image',
-          url: drawing.properties.object.url,
-          coordinates: [c[0], c[1], c[2], c[3]]
-        };
-
-        map.addSource(drawing.properties.source_id, options);
-
-        map.addLayer({
-          id: drawing.properties.layer_id,
-          source: drawing.properties.source_id,
-          type: 'raster',
-          layout: {
-            'visibility': 'visible'
-          },
-          paint: {
-            "raster-opacity": 0.65
+          if (map.getSource(drawing.properties.source_id)) {
+            map.removeSource(drawing.properties.source_id);
           }
-        }, 'directions-route-line');
+
+          if (map.getLayer(drawing.properties.layer_id)) {
+            map.removeLayer(drawing.properties.layer_id);
+          }
+
+          const c = drawing.geometry.coordinates[0];
+
+          const options = {
+            type: 'image',
+            url: drawing.properties.object.url,
+            coordinates: [c[0], c[1], c[2], c[3]]
+          };
+
+          map.addSource(drawing.properties.source_id, options);
+
+          map.addLayer({
+            id: drawing.properties.layer_id,
+            source: drawing.properties.source_id,
+            type: 'raster',
+            layout: {
+              'visibility': 'visible'
+            },
+            paint: {
+              "raster-opacity": 0.65
+            }
+          }, 'directions-route-line');
+        }
       });
     }
 

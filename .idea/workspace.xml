@@ -7,7 +7,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/angular-mapboxgl-directive.min.js" afterPath="$PROJECT_DIR$/dist/angular-mapboxgl-directive.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.js" afterPath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.min.js" afterPath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/directives/glLayerControls.js" afterPath="$PROJECT_DIR$/src/directives/glLayerControls.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/factories/floorplansManager.js" afterPath="$PROJECT_DIR$/src/factories/floorplansManager.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -26,8 +25,8 @@
       <file leaf-file-name="floorplansManager.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/factories/floorplansManager.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1539">
-              <caret line="75" column="9" lean-forward="true" selection-start-line="65" selection-start-column="6" selection-end-line="75" selection-end-column="9" />
+            <state relative-caret-position="425">
+              <caret line="79" column="41" lean-forward="false" selection-start-line="79" selection-start-column="41" selection-end-line="79" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -379,15 +378,15 @@
       <workItem from="1505286706725" duration="2503000" />
       <workItem from="1506325788383" duration="8395000" />
       <workItem from="1506348753607" duration="5825000" />
-      <workItem from="1506413069161" duration="4848000" />
+      <workItem from="1506413069161" duration="5435000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="65265000" />
+    <option name="totallyTimeSpent" value="65852000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-11" y="-11" width="3862" height="2122" extended-state="6" />
+    <frame x="-11" y="-11" width="3862" height="2122" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24862024" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -778,8 +777,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/factories/floorplansManager.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1539">
-          <caret line="75" column="9" lean-forward="true" selection-start-line="65" selection-start-column="6" selection-end-line="75" selection-end-column="9" />
+        <state relative-caret-position="425">
+          <caret line="79" column="41" lean-forward="false" selection-start-line="79" selection-start-column="41" selection-end-line="79" selection-end-column="41" />
           <folding />
         </state>
       </provider>
