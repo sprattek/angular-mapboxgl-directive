@@ -1,12 +1,13 @@
 {
   "name": "angular-mapboxgl-directive",
-  "version": "0.40.0",
+  "version": "0.40.2",
   "homepage": "https://naimikan.github.io/angular-mapboxgl-directive/",
   "authors": [
     "https://github.com/Naimikan/angular-mapboxgl-directive/graphs/contributors"
   ],
   "description": "An AngularJS directive for Mapbox GL",
   "main": [
+    "dist/mapbox-gl.css",
     "dist/mapbox-gl-directions.css",
     "dist/mapbox-gl-compare.css",
     "dist/mapbox-gl-draw.css",

@@ -101,7 +101,7 @@
         options: nonEditableOpts
       }];
 
-      $scope.glFloorplanss = [{
+      $scope.glFloorplans = [{
         url: 'http://generva.com/5/2015/11/architecture-designs-custom-kitchen-draw-floorplan-kitchen-floor-planner.jpg',
         coordinates: [[-77.02, 38.90], [-77.02, 38.91], [-77.01, 38.90], [-77.01, 38.91]],
         id: 'floorplan01',
