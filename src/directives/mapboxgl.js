@@ -309,7 +309,7 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
       glZoom: '=',
       glLayerControls: '='
     },
-    template: '<div class="angular-mapboxgl-map"><div class="angular-mapboxgl-map-loader"><div class="spinner"><div class="double-bounce"></div><div class="double-bounce delayed"></div></div></div><div class="layer-controls"><a href="javascript:;"></a><ul id="mapbox-layer-controls"></ul></div>',
+    template: '<div class="angular-mapboxgl-map"><div class="angular-mapboxgl-map-loader"><div class="spinner"><div class="double-bounce"></div><div class="double-bounce delayed"></div></div></div><div class="layer-controls hidden"><a href="javascript:;"></a><ul id="mapbox-layer-controls"></ul></div>',
     controller: mapboxGlDirectiveController,
     link: mapboxGlDirectiveLink
   };

@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.0 2017-09-26
+*  angular-mapboxgl-directive 0.40.2 2017-11-06
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -317,7 +317,7 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
       glZoom: '=',
       glLayerControls: '='
     },
-    template: '<div class="angular-mapboxgl-map"><div class="angular-mapboxgl-map-loader"><div class="spinner"><div class="double-bounce"></div><div class="double-bounce delayed"></div></div></div><div class="layer-controls"><a href="javascript:;"></a><ul id="mapbox-layer-controls"></ul></div>',
+    template: '<div class="angular-mapboxgl-map"><div class="angular-mapboxgl-map-loader"><div class="spinner"><div class="double-bounce"></div><div class="double-bounce delayed"></div></div></div><div class="layer-controls hidden"><a href="javascript:;"></a><ul id="mapbox-layer-controls"></ul></div>',
     controller: mapboxGlDirectiveController,
     link: mapboxGlDirectiveLink
   };
@@ -2435,6 +2435,8 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
     var placeholder = document.getElementById('mapbox-layer-controls');
     var layersCopy = {};
 
+    placeholder.parentElement.classList.remove("hidden");
+
     angular.forEach(controls, function(control){
       var list_item = document.createElement('li');
       var link = document.createElement('a');
@@ -2466,7 +2468,6 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
 
     if (mapboxglScope.glFloorplans.length > 0) {
       controller.getMap().then(function (map) {
-        console.log(map);
         angular.forEach(mapboxglScope.glFloorplans, function(control){
           var list_item = document.createElement('li');
           var link = document.createElement('a');
@@ -2495,6 +2496,8 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
           placeholder.appendChild(list_item);
         });
       });
+    } else {
+      placeholder.className = 'hidden';
     }
 
   }

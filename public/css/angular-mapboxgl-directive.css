@@ -57,6 +57,9 @@
   right: 55px;
   top: 8px;
 }
+.angular-mapboxgl-map .layer-controls.hidden {
+  display: none;
+}
 .angular-mapboxgl-map .layer-controls > a {
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAABkElEQVRYR+3X642DMAwAYHeCsAHZDEZgg9INGAE2gw3IBidHGEVung6ovdNV6o+2Iv3qF+4DvuTx+BIH/EN4Jq6IiDoONTVproEgYDieaJiOpwgkgZwApVQzDGgBmKYJjDG7FFQCeQMgomkaC9n33WKkoBxIFMDrQgqKQYoAtSAfpAogBbmQSwGlIII8sQ2pC9wirJkNvmsDNfQiSAcAIwDorutgHEfQWl9tsOet62rPX5bFvjy+d+E1chsoBKBf64UopTTOh23boDZCLqBtWztvjDFnJDjERgIBWB9UI/M82zBKQByA5/R9zwffW2q8ENKWgEIAOosVa7xGeGRyQFJAtEaweyifbqpCIHwfuwCvoRT4IkB153aLt0Z4+1JKMJwxEB6WAtDnqfaNDrQUyB04bg1gBGJAZ204BxqelRzxMZAQgMuUXaRENz0OosWoIAInIFSsbpSzI5SqkZzN7VcsRvym9/FVMQmiGslJQeiWnpOa0LUf/zvhixC+J/o/k9M1tyxGd6TmUmhNjfxNyA/iCuIy9rPzBwAAAABJRU5ErkJggg==);
   width: 48px;
