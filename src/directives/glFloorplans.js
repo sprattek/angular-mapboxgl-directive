@@ -17,7 +17,7 @@ angular.module('mapboxgl-directive').directive('glFloorplans', ['FloorplansManag
             scope.floorplanManager.createFloorplanByObject(eachFloorplan, mapboxglDrawInstance);
           });
         } else {
-          throw new Error('Invalid circle parameter');
+          throw new Error('Invalid floorplan parameter');
         }
       }
     };
@@ -28,7 +28,7 @@ angular.module('mapboxgl-directive').directive('glFloorplans', ['FloorplansManag
         if (controlsRendered.draw) {
           var mapboxglDrawInstance = controlsRendered.draw.control;
 
-          mapboxglScope.$watchCollection('glFloorplans', function (floorplans) {
+          scope.$watchCollection('glFloorplans', function (floorplans) {
             floorplansWatched(floorplans, mapboxglDrawInstance);
           });
         }

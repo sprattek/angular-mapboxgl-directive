@@ -106,14 +106,19 @@
         coordinates: [[-77.02, 38.90], [-77.02, 38.91], [-77.01, 38.90], [-77.01, 38.91]],
         id: 'floorplan01',
         name: 'Floor 1',
-        editable: true
-      }, {
-        url: 'http://generva.com/5/2015/11/architecture-designs-custom-kitchen-draw-floorplan-kitchen-floor-planner.jpg',
-        coordinates: [[-77.04, 38.90], [-77.04, 38.91], [-77.03, 38.90], [-77.03, 38.91]],
-        id: 'floorplan02',
-        name: 'Floor 2',
         editable: false
       }];
+
+      setTimeout(function(){
+        $scope.glFloorplans.push({
+          url: 'http://generva.com/5/2015/11/architecture-designs-custom-kitchen-draw-floorplan-kitchen-floor-planner.jpg',
+          coordinates: [[-77.04, 38.90], [-77.04, 38.91], [-77.03, 38.90], [-77.03, 38.91]],
+          id: 'floorplan02',
+          name: 'Floor 2',
+          editable: true
+        });
+        $scope.$apply();
+      }, 3000);
 
       var el = document.createElement('div');
       el.className = 'marker';
@@ -161,7 +166,7 @@
         name: 'Geofences',
         visible: true
       }, {
-        type: 'glFloorplanss',
+        type: 'glFloorplans',
         name: 'Floorplans',
         visible: true
       }];

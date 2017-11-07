@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.2 2017-11-06
+*  angular-mapboxgl-directive 0.40.4 2017-11-07
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -1724,10 +1724,10 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.0',
+	full: '0.40.4',
 	major: 0,
 	minor: 40,
-	patch: 0
+	patch: 4
 });
 
 angular.module('mapboxgl-directive').constant('mapboxglConstants', {
@@ -2244,7 +2244,7 @@ angular.module('mapboxgl-directive').directive('glFloorplans', ['FloorplansManag
             scope.floorplanManager.createFloorplanByObject(eachFloorplan, mapboxglDrawInstance);
           });
         } else {
-          throw new Error('Invalid circle parameter');
+          throw new Error('Invalid floorplan parameter');
         }
       }
     };
@@ -2255,7 +2255,7 @@ angular.module('mapboxgl-directive').directive('glFloorplans', ['FloorplansManag
         if (controlsRendered.draw) {
           var mapboxglDrawInstance = controlsRendered.draw.control;
 
-          mapboxglScope.$watchCollection('glFloorplans', function (floorplans) {
+          scope.$watchCollection('glFloorplans', function (floorplans) {
             floorplansWatched(floorplans, mapboxglDrawInstance);
           });
         }
@@ -2466,39 +2466,44 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
       placeholder.appendChild(list_item);
     });
 
-    if (mapboxglScope.glFloorplans.length > 0) {
-      controller.getMap().then(function (map) {
-        angular.forEach(mapboxglScope.glFloorplans, function(control){
-          var list_item = document.createElement('li');
-          var link = document.createElement('a');
-          list_item.appendChild(link);
-          link.href = '#';
-          link.className = 'active';
-          link.textContent = control.name;
-          link.id = control.id;
+    scope.$watchCollection('glFloorplans', function(floorplans){
+      if (floorplans && floorplans.length > 0) {
+        controller.getMap().then(function (map) {
+          angular.forEach(floorplans, function(control){
 
-          link.onclick = function (e) {
-            const id = 'floorplan-'+this.id;
-            e.preventDefault();
-            e.stopPropagation();
-
-            var visibility = map.getLayoutProperty(id, 'visibility');
-
-            if (visibility === 'visible') {
-              map.setLayoutProperty(id, 'visibility', 'none');
-              this.className = '';
-            } else {
-              this.className = 'active';
-              map.setLayoutProperty(id, 'visibility', 'visible');
+            if (document.getElementById(control.id)) {
+              document.getElementById(control.id).remove();
             }
-          };
 
-          placeholder.appendChild(list_item);
+            var list_item = document.createElement('li');
+            var link = document.createElement('a');
+            list_item.appendChild(link);
+            link.href = '#';
+            link.className = 'active';
+            link.textContent = control.name;
+            link.id = control.id;
+
+            link.onclick = function (e) {
+              const id = 'floorplan-'+this.id;
+              e.preventDefault();
+              e.stopPropagation();
+
+              var visibility = map.getLayoutProperty(id, 'visibility');
+
+              if (visibility === 'visible') {
+                map.setLayoutProperty(id, 'visibility', 'none');
+                this.className = '';
+              } else {
+                this.className = 'active';
+                map.setLayoutProperty(id, 'visibility', 'visible');
+              }
+            };
+
+            placeholder.appendChild(list_item);
+          });
         });
-      });
-    } else {
-      placeholder.className = 'hidden';
-    }
+      }
+    });
 
   }
 
