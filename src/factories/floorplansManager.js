@@ -29,7 +29,7 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
     const options = {
       type: 'image',
       url: object.url,
-      coordinates: [c[1], c[3], c[2], c[0]]
+      coordinates: [[c[0][1], c[0][0]], [c[1][1], c[1][0]], [c[3][1], c[3][0]], [c[2][1], c[2][0]]]
     };
 
     this.mapInstance.addSource(sourceId, options);
@@ -61,7 +61,18 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
           source_id: sourceId,
           object: object
         },
-        geometry: { type: 'Polygon', coordinates: [[c[1], c[3], c[2], c[0], c[1]]] }
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [c[0][1], c[0][0]],
+              [c[1][1], c[1][0]],
+              [c[3][1], c[3][0]],
+              [c[2][1], c[2][0]],
+              [c[0][1], c[0][0]]
+            ]
+          ]
+        }
       };
       var drawAdded = false;
 
@@ -95,6 +106,8 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
             url: drawing.properties.object.url,
             coordinates: [c[0], c[1], c[2], c[3]]
           };
+
+          object.coordinates =  [[c[0][1], c[0][0]], [c[1][1], c[1][0]], [c[3][1], c[3][0]], [c[2][1], c[2][0]]];
 
           map.addSource(drawing.properties.source_id, options);
 

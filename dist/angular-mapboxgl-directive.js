@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.4 2017-11-07
+*  angular-mapboxgl-directive 0.40.5 2017-11-07
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -582,7 +582,7 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
 
     var circleOptions = object.options || {};
 
-    var circle = new MapboxCircle(object.coordinates, object.radius, circleOptions);
+    var circle = new MapboxCircle([object.coordinates[1], object.coordinates[0]], object.radius, circleOptions);
 
     circle.addTo(this.mapInstance);
 
@@ -634,7 +634,7 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
     const options = {
       type: 'image',
       url: object.url,
-      coordinates: [c[1], c[3], c[2], c[0]]
+      coordinates: [[c[0][1], c[0][0]], [c[1][1], c[1][0]], [c[3][1], c[3][0]], [c[2][1], c[2][0]]]
     };
 
     this.mapInstance.addSource(sourceId, options);
@@ -666,7 +666,18 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
           source_id: sourceId,
           object: object
         },
-        geometry: { type: 'Polygon', coordinates: [[c[1], c[3], c[2], c[0], c[1]]] }
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [c[0][1], c[0][0]],
+              [c[1][1], c[1][0]],
+              [c[3][1], c[3][0]],
+              [c[2][1], c[2][0]],
+              [c[0][1], c[0][0]]
+            ]
+          ]
+        }
       };
       var drawAdded = false;
 
@@ -700,6 +711,8 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
             url: drawing.properties.object.url,
             coordinates: [c[0], c[1], c[2], c[3]]
           };
+
+          object.coordinates =  [[c[0][1], c[0][0]], [c[1][1], c[1][0]], [c[3][1], c[3][0]], [c[2][1], c[2][0]]];
 
           map.addSource(drawing.properties.source_id, options);
 
@@ -1196,11 +1209,11 @@ angular.module('mapboxgl-directive').factory('MarkersManager', ['Utils', 'mapbox
 
     var markerOptions = object.options || {};
 
-    var marker = new mapboxgl.Marker(object.element, markerOptions).setLngLat(object.coordinates);
+    var marker = new mapboxgl.Marker(object.element, markerOptions).setLngLat([object.coordinates[1], object.coordinates[0]]);
 
-    if (angular.isDefined(object.popup) && angular.isDefined(object.popup.enabled) && object.popup.enabled) {
+    if (angular.isDefined(object.popup) && angular.isDefined(object.popup.enabled) && object.popup.enabled && object.popup.coordinates) {
       var popup = this.popupManger.createPopupByObject({
-        coordinates: object.popup.coordinates,
+        coordinates: [object.popup.coordinates[1], object.popup.coordinates[0]],
         options: object.popup.options,
         message: object.popup.message,
         getScope: object.popup.getScope,
@@ -1348,7 +1361,7 @@ angular.module('mapboxgl-directive').factory('PopupsManager', ['Utils', 'mapboxg
       var popupCoordinates = object.coordinates;
 
       if (angular.isDefined(feature) && feature !== null) {
-        popupCoordinates = popupCoordinates === 'center' ? feature.geometry.coordinates : popupCoordinates;
+        popupCoordinates = popupCoordinates === 'center' ? [feature.geometry.coordinates[1], feature.geometry.coordinates[0]] : [popupCoordinates[1], popupCoordinates[0]];
       }
 
       if (popupCoordinates !== 'center') {
@@ -1724,10 +1737,10 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.4',
+	full: '0.40.5',
 	major: 0,
 	minor: 40,
-	patch: 4
+	patch: 5
 });
 
 angular.module('mapboxgl-directive').constant('mapboxglConstants', {
@@ -1883,15 +1896,15 @@ angular.module('mapboxgl-directive').directive('glCenter', ['Utils', 'mapboxglCo
 				Utils.validateAndFormatCenter(center).then(function (newCenter) {
 					if (newCenter) {
 						if (angular.isDefined(oldCenter) && center !== oldCenter) {
-							map.flyTo({ center: newCenter });
+							map.flyTo({ center: [newCenter[1], newCenter[0]] });
 						} else {
-							map.setCenter(newCenter);
+							map.setCenter([newCenter[1], newCenter[0]]);
 						}
 					} else {
 						throw new Error('Invalid center');
 					}
 				}).catch(function (error) {
-					map.setCenter(mapboxglConstants.map.defaultCenter);
+					map.setCenter([mapboxglConstants.map.defaultCenter[1], mapboxglConstants.map.defaultCenter[0]]);
 
 					throw new Error(error.code + ' / ' + error.message);
 				});

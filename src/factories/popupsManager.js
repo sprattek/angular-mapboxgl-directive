@@ -117,7 +117,7 @@ angular.module('mapboxgl-directive').factory('PopupsManager', ['Utils', 'mapboxg
       var popupCoordinates = object.coordinates;
 
       if (angular.isDefined(feature) && feature !== null) {
-        popupCoordinates = popupCoordinates === 'center' ? feature.geometry.coordinates : popupCoordinates;
+        popupCoordinates = popupCoordinates === 'center' ? [feature.geometry.coordinates[1], feature.geometry.coordinates[0]] : [popupCoordinates[1], popupCoordinates[0]];
       }
 
       if (popupCoordinates !== 'center') {

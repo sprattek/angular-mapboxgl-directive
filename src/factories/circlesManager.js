@@ -23,7 +23,7 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
 
     var circleOptions = object.options || {};
 
-    var circle = new MapboxCircle(object.coordinates, object.radius, circleOptions);
+    var circle = new MapboxCircle([object.coordinates[1], object.coordinates[0]], object.radius, circleOptions);
 
     circle.addTo(this.mapInstance);
 

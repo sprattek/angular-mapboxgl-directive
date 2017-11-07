@@ -91,19 +91,19 @@
       };
 
       $scope.glCircles = [{
-        coordinates: [-77.04, 38.907],
+        coordinates: [38.907, -77.04],
         radius: 350,
         options: editableOpts,
         id: 'circle01'
       }, {
-        coordinates: [-77.02, 38.901],
+        coordinates: [38.901, -77.02],
         radius: 210,
         options: nonEditableOpts
       }];
 
       $scope.glFloorplans = [{
         url: 'http://generva.com/5/2015/11/architecture-designs-custom-kitchen-draw-floorplan-kitchen-floor-planner.jpg',
-        coordinates: [[-77.02, 38.90], [-77.02, 38.91], [-77.01, 38.90], [-77.01, 38.91]],
+        coordinates: [[38.90, -77.02], [38.91, -77.02], [38.90, -77.01], [38.91, -77.01]],
         id: 'floorplan01',
         name: 'Floor 1',
         editable: false
@@ -112,7 +112,7 @@
       setTimeout(function(){
         $scope.glFloorplans.push({
           url: 'http://generva.com/5/2015/11/architecture-designs-custom-kitchen-draw-floorplan-kitchen-floor-planner.jpg',
-          coordinates: [[-77.04, 38.90], [-77.04, 38.91], [-77.03, 38.90], [-77.03, 38.91]],
+          coordinates: [[38.90, -77.04], [38.91, -77.04], [38.90, -77.03], [38.91, -77.03]],
           id: 'floorplan02',
           name: 'Floor 2',
           editable: true
@@ -136,7 +136,7 @@
 
       $scope.glMarkers = [
         {
-          coordinates: [-77.04, 38.908],
+          coordinates: [38.908, -77.04],
           element: el,
           options: {
             offset: [-25, -25]
@@ -152,7 +152,7 @@
             }
           }
         }, {
-          coordinates: [-77.03, 38.907],
+          coordinates: [38.907, -77.03],
           element: el2
         }
       ];

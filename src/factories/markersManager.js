@@ -27,11 +27,11 @@ angular.module('mapboxgl-directive').factory('MarkersManager', ['Utils', 'mapbox
 
     var markerOptions = object.options || {};
 
-    var marker = new mapboxgl.Marker(object.element, markerOptions).setLngLat(object.coordinates);
+    var marker = new mapboxgl.Marker(object.element, markerOptions).setLngLat([object.coordinates[1], object.coordinates[0]]);
 
-    if (angular.isDefined(object.popup) && angular.isDefined(object.popup.enabled) && object.popup.enabled) {
+    if (angular.isDefined(object.popup) && angular.isDefined(object.popup.enabled) && object.popup.enabled && object.popup.coordinates) {
       var popup = this.popupManger.createPopupByObject({
-        coordinates: object.popup.coordinates,
+        coordinates: [object.popup.coordinates[1], object.popup.coordinates[0]],
         options: object.popup.options,
         message: object.popup.message,
         getScope: object.popup.getScope,
