@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.6 2017-11-09
+*  angular-mapboxgl-directive 0.40.7 2017-11-09
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -716,6 +716,12 @@ angular.module('mapboxgl-directive').factory('DraggablePointsManager', ['Utils',
       }
     });
 
+    this.draggablePointsCreated.push({
+      id: id,
+      sourceId: sourceId,
+      mapInstance: map
+    });
+
     // When the cursor enters a feature in the point layer, prepare for dragging.
     map.on('mouseenter', id, function() {
       map.setPaintProperty(id, 'circle-color', object.hoverColor ? object.hoverColor : '#3bb2d0');
@@ -737,7 +743,13 @@ angular.module('mapboxgl-directive').factory('DraggablePointsManager', ['Utils',
 
   DraggablePointsManager.prototype.removeAllDraggablePointsCreated = function () {
     this.draggablePointsCreated.map(function (eachDraggablePoint) {
-      eachDraggablePoint.draggablePointInstance.remove();
+      if (eachDraggablePoint.mapInstance.getSource(eachDraggablePoint.sourceId)) {
+        eachDraggablePoint.mapInstance.removeSource(eachDraggablePoint.sourceId);
+      }
+
+      if (eachDraggablePoint.mapInstance.getLayer(eachDraggablePoint.id)) {
+        eachDraggablePoint.mapInstance.removeLayer(eachDraggablePoint.id);
+      }
     });
 
     this.draggablePointsCreated = [];
@@ -1880,10 +1892,10 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.6',
+	full: '0.40.7',
 	major: 0,
 	minor: 40,
-	patch: 6
+	patch: 7
 });
 
 angular.module('mapboxgl-directive').constant('mapboxglConstants', {

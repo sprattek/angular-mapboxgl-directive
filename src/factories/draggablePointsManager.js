@@ -110,6 +110,12 @@ angular.module('mapboxgl-directive').factory('DraggablePointsManager', ['Utils',
       }
     });
 
+    this.draggablePointsCreated.push({
+      id: id,
+      sourceId: sourceId,
+      mapInstance: map
+    });
+
     // When the cursor enters a feature in the point layer, prepare for dragging.
     map.on('mouseenter', id, function() {
       map.setPaintProperty(id, 'circle-color', object.hoverColor ? object.hoverColor : '#3bb2d0');
@@ -131,7 +137,13 @@ angular.module('mapboxgl-directive').factory('DraggablePointsManager', ['Utils',
 
   DraggablePointsManager.prototype.removeAllDraggablePointsCreated = function () {
     this.draggablePointsCreated.map(function (eachDraggablePoint) {
-      eachDraggablePoint.draggablePointInstance.remove();
+      if (eachDraggablePoint.mapInstance.getSource(eachDraggablePoint.sourceId)) {
+        eachDraggablePoint.mapInstance.removeSource(eachDraggablePoint.sourceId);
+      }
+
+      if (eachDraggablePoint.mapInstance.getLayer(eachDraggablePoint.id)) {
+        eachDraggablePoint.mapInstance.removeLayer(eachDraggablePoint.id);
+      }
     });
 
     this.draggablePointsCreated = [];
