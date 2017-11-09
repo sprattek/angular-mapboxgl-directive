@@ -11,33 +11,44 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
 
     placeholder.parentElement.classList.remove("hidden");
 
-    angular.forEach(controls, function(control){
-      var list_item = document.createElement('li');
-      var link = document.createElement('a');
-      list_item.appendChild(link);
-      link.href = '#';
-      link.className = 'active';
-      link.textContent = control.name;
-      link.id = control.type;
-      layersCopy[control.type] = scope[control.type];
+    scope.$watchCollection('glLayerControls', function(controls){
+      if (controls && controls.length > 0) {
+        controller.getMap().then(function (map) {
+          angular.forEach(controls, function(control){
 
-      link.onclick = function (e) {
-        var clickedLayer = this.textContent;
-        e.preventDefault();
-        e.stopPropagation();
+            if (document.getElementById(control.type)) {
+              document.getElementById(control.type).remove();
+            }
 
-        if (scope[this.id].length > 0) {
-          this.className = '';
-          scope[this.id] = [];
-          scope.$apply();
-        } else {
-          this.className = 'active';
-          scope[this.id] = layersCopy[this.id];
-          scope.$apply();
-        }
-      };
+            var list_item = document.createElement('li');
+            var link = document.createElement('a');
+            list_item.appendChild(link);
+            link.href = '#';
+            link.className = 'active';
+            link.textContent = control.name;
+            link.id = control.type;
+            layersCopy[control.type] = scope[control.type];
 
-      placeholder.appendChild(list_item);
+            link.onclick = function (e) {
+              var clickedLayer = this.textContent;
+              e.preventDefault();
+              e.stopPropagation();
+
+              if (scope[this.id].length > 0) {
+                this.className = '';
+                scope[this.id] = [];
+                scope.$apply();
+              } else {
+                this.className = 'active';
+                scope[this.id] = layersCopy[this.id];
+                scope.$apply();
+              }
+            };
+
+            placeholder.appendChild(list_item);
+          });
+        });
+      }
     });
 
     scope.$watchCollection('glFloorplans', function(floorplans){
@@ -62,14 +73,16 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
               e.preventDefault();
               e.stopPropagation();
 
-              var visibility = map.getLayoutProperty(id, 'visibility');
+              if (map && map.getLayer(id)) {
+                var visibility = map.getLayoutProperty(id, 'visibility');
 
-              if (visibility === 'visible') {
-                map.setLayoutProperty(id, 'visibility', 'none');
-                this.className = '';
-              } else {
-                this.className = 'active';
-                map.setLayoutProperty(id, 'visibility', 'visible');
+                if (visibility === 'visible') {
+                  map.setLayoutProperty(id, 'visibility', 'none');
+                  this.className = '';
+                } else {
+                  this.className = 'active';
+                  map.setLayoutProperty(id, 'visibility', 'visible');
+                }
               }
             };
 
