@@ -53,7 +53,7 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
             var link = document.createElement('a');
             list_item.appendChild(link);
             link.href = '#';
-            link.className = 'active';
+            link.className = control.visible ? 'active' : '';
             link.textContent = control.name;
             link.id = control.id;
 

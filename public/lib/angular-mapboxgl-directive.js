@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.5 2017-11-07
+*  angular-mapboxgl-directive 0.40.6 2017-11-09
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -306,6 +306,7 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
       glCircles: '=',
       glMarkers: '=',
       glFloorplans: '=',
+      glDraggablePoints: '=',
       glMaxBounds: '=',
       glMaxZoom: '=',
       glMinZoom: '=',
@@ -603,6 +604,148 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
   return CirclesManager;
 }]);
 
+angular.module('mapboxgl-directive').factory('DraggablePointsManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
+  function DraggablePointsManager (mapInstance) {
+    this.draggablePointsCreated = [];
+    this.mapInstance = mapInstance;
+  }
+
+  DraggablePointsManager.prototype.createDraggablePointByObject = function (object) {
+    Utils.checkObjects([
+      {
+        name: 'Map',
+        object: this.mapInstance
+      }, {
+        name: 'Object',
+        object: object,
+        attributes: ['coordinates']
+      }
+    ]);
+
+    var map = this.mapInstance;
+    var elementId = object.id;
+    elementId = angular.isDefined(elementId) && elementId !== null ? elementId : Utils.generateGUID();
+
+    object.id = elementId;
+
+    const id = 'point-'+elementId;
+    const sourceId = 'point-source-'+elementId;
+
+    // ***** input marker initialization
+    // Holds mousedown state for events. if this
+    // flag is active, we move the point on `mousemove`.
+    var isDragging;
+
+    // Is the cursor over a point? if this
+    // flag is active, we listen for a mousedown event.
+    var isCursorOverPoint;
+
+    var canvas = this.mapInstance.getCanvasContainer();
+
+    var geojson = {
+      "type": "FeatureCollection",
+      "features": [{
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [object.coordinates[1], object.coordinates[0]]
+        }
+      }]
+    };
+
+    function onMove(e) {
+      if (!isDragging) {return;}
+      var coords = e.lngLat;
+
+
+      // Set a UI indicator for dragging.
+      canvas.style.cursor = 'grabbing';
+
+      // Update the Point feature in `geojson` coordinates
+      // and call setData to the source layer `point` on it.
+      geojson.features[0].geometry.coordinates = [coords.lng, coords.lat];
+      map.getSource(sourceId).setData(geojson);
+    }
+
+    function onUp(e) {
+      if (!isDragging) {return;}
+
+      var coords = e.lngLat;
+
+      // Print the coordinates of where the point had
+      // finished being dragged to on the map.
+      canvas.style.cursor = '';
+      isDragging = false;
+
+      object.coordinates = [coords.lat, coords.lng];
+
+      // Unbind mouse events
+      map.off('mousemove', onMove);
+    }
+
+    function mouseDown() {
+      if (!isCursorOverPoint) {return;}
+
+      isDragging = true;
+
+      // Set a cursor indicator
+      canvas.style.cursor = 'grab';
+      map.dragPan.disable();
+
+      // Mouse events
+      map.on('mousemove', onMove);
+      map.once('mouseup', onUp);
+    }
+
+    // Add a single point to the map
+    map.addSource(sourceId, {
+      "type": "geojson",
+      "data": geojson
+    });
+
+    map.addLayer({
+      "id": id,
+      "type": "circle",
+      "source": sourceId,
+      "layout": {
+        'visibility': object.visible ? 'visible' : 'none'
+      },
+      "paint": {
+        "circle-radius": object.radius ? object.radius : 10,
+        "circle-color": object.color ? object.color : '#3887be'
+      }
+    });
+
+    // When the cursor enters a feature in the point layer, prepare for dragging.
+    map.on('mouseenter', id, function() {
+      map.setPaintProperty(id, 'circle-color', object.hoverColor ? object.hoverColor : '#3bb2d0');
+      canvas.style.cursor = 'move';
+      isCursorOverPoint = true;
+      map.dragPan.disable();
+    });
+
+    map.on('mouseleave', id, function() {
+      map.setPaintProperty(id, 'circle-color', object.color ? object.color : '#3887be');
+      canvas.style.cursor = '';
+      isCursorOverPoint = false;
+      map.dragPan.enable();
+    });
+
+    map.on('mousedown', mouseDown);
+
+  };
+
+  DraggablePointsManager.prototype.removeAllDraggablePointsCreated = function () {
+    this.draggablePointsCreated.map(function (eachDraggablePoint) {
+      eachDraggablePoint.draggablePointInstance.remove();
+    });
+
+    this.draggablePointsCreated = [];
+  };
+
+  return DraggablePointsManager;
+}]);
+
 angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
   function FloorplansManager (mapInstance) {
     this.floorplansCreated = [];
@@ -644,7 +787,7 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       source: sourceId,
       type: 'raster',
       layout: {
-        'visibility': 'visible'
+        'visibility': object.visible ? 'visible' : 'none'
       },
       paint: {
         "raster-opacity": 0.65
@@ -721,7 +864,7 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
             source: drawing.properties.source_id,
             type: 'raster',
             layout: {
-              'visibility': 'visible'
+              'visibility': object.visible ? 'visible' : 'none'
             },
             paint: {
               "raster-opacity": 0.65
@@ -1737,10 +1880,10 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.5',
+	full: '0.40.6',
 	major: 0,
 	minor: 40,
-	patch: 5
+	patch: 6
 });
 
 angular.module('mapboxgl-directive').constant('mapboxglConstants', {
@@ -2194,6 +2337,55 @@ angular.module('mapboxgl-directive').directive('glControls', ['$rootScope', 'Uti
 	return directive;
 }]);
 
+angular.module('mapboxgl-directive').directive('glDraggablePoints', ['DraggablePointsManager', function (DraggablePointsManager) {
+  function mapboxGlDraggablePointsDirectiveLink (scope, element, attrs, controller) {
+    if (!controller) {
+			throw new Error('Invalid angular-mapboxgl-directive controller');
+		}
+
+		var mapboxglScope = controller.getMapboxGlScope();
+
+    var draggablePointsWatched = function (draggablePoints) {
+      if (angular.isDefined(draggablePoints)) {
+        scope.draggablePointManager.removeAllDraggablePointsCreated();
+
+        if (Object.prototype.toString.call(draggablePoints) === Object.prototype.toString.call({})) {
+          scope.draggablePointManager.createDraggablePointByObject(draggablePoints);
+        } else if (Object.prototype.toString.call(draggablePoints) === Object.prototype.toString.call([])) {
+          draggablePoints.map(function (eachDraggablePoint) {
+            scope.draggablePointManager.createDraggablePointByObject(eachDraggablePoint);
+          });
+        } else {
+          throw new Error('Invalid draggable point parameter');
+        }
+      }
+    };
+
+    controller.getMap().then(function (map) {
+      scope.draggablePointManager = new DraggablePointsManager(map);
+
+      mapboxglScope.$watchCollection('glDraggablePoints', function (draggablePoints) {
+        draggablePointsWatched(draggablePoints);
+      });
+    });
+
+    scope.$on('$destroy', function () {
+      // ToDo: remove all draggable points
+      scope.draggablePointManager.removeAllDraggablePointsCreated();
+    });
+  }
+
+  var directive = {
+		restrict: 'A',
+		scope: false,
+		replace: false,
+		require: '?^mapboxgl',
+		link: mapboxGlDraggablePointsDirectiveLink
+	};
+
+	return directive;
+}]);
+
 angular.module('mapboxgl-directive').directive('glFilter', [function () {
 	function mapboxGlFilterDirectiveLink (scope, element, attrs, controller) {
 		if (!controller) {
@@ -2492,7 +2684,7 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
             var link = document.createElement('a');
             list_item.appendChild(link);
             link.href = '#';
-            link.className = 'active';
+            link.className = control.visible ? 'active' : '';
             link.textContent = control.name;
             link.id = control.id;
 

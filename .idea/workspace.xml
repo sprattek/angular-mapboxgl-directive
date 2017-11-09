@@ -7,6 +7,8 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/angular-mapboxgl-directive.css" afterPath="$PROJECT_DIR$/dist/angular-mapboxgl-directive.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/angular-mapboxgl-directive.js" afterPath="$PROJECT_DIR$/dist/angular-mapboxgl-directive.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/angular-mapboxgl-directive.min.js" afterPath="$PROJECT_DIR$/dist/angular-mapboxgl-directive.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/mapbox-gl.css" afterPath="$PROJECT_DIR$/dist/mapbox-gl.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/mapbox-gl.js" afterPath="$PROJECT_DIR$/dist/mapbox-gl.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/app.js" afterPath="$PROJECT_DIR$/public/app.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/angular-mapboxgl-directive.css" afterPath="$PROJECT_DIR$/public/css/angular-mapboxgl-directive.css" />
@@ -14,12 +16,12 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.js" afterPath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.min.js" afterPath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/constants/mapboxglConstants.js" afterPath="$PROJECT_DIR$/src/constants/mapboxglConstants.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/directives/glCenter.js" afterPath="$PROJECT_DIR$/src/directives/glCenter.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/factories/circlesManager.js" afterPath="$PROJECT_DIR$/src/factories/circlesManager.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/directives/glLayerControls.js" afterPath="$PROJECT_DIR$/src/directives/glLayerControls.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/directives/mapboxgl.js" afterPath="$PROJECT_DIR$/src/directives/mapboxgl.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/factories/floorplansManager.js" afterPath="$PROJECT_DIR$/src/factories/floorplansManager.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/factories/markersManager.js" afterPath="$PROJECT_DIR$/src/factories/markersManager.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/factories/popupsManager.js" afterPath="$PROJECT_DIR$/src/factories/popupsManager.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/less/mapboxglLess.less" afterPath="$PROJECT_DIR$/src/less/mapboxglLess.less" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/mapbox-gl.css" afterPath="$PROJECT_DIR$/vendor/mapbox-gl.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/mapbox-gl.js" afterPath="$PROJECT_DIR$/vendor/mapbox-gl.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -34,21 +36,51 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="284">
-      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/app.js">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="695">
-              <caret line="113" column="16" lean-forward="false" selection-start-line="113" selection-start-column="16" selection-end-line="113" selection-end-column="121" />
+            <state relative-caret-position="1026">
+              <caret line="38" column="47" lean-forward="false" selection-start-line="38" selection-start-column="47" selection-end-line="38" selection-end-column="47" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="glFloorplans.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/directives/glFloorplans.js">
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1532">
+              <caret line="172" column="9" lean-forward="false" selection-start-line="172" selection-start-column="9" selection-end-line="172" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="glLights.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/directives/glLights.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="729">
+              <caret line="27" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="glDraggablePoints.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/directives/glDraggablePoints.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="405">
-              <caret line="15" column="51" lean-forward="false" selection-start-line="15" selection-start-column="51" selection-end-line="15" selection-end-column="51" />
+              <caret line="15" column="61" lean-forward="false" selection-start-line="15" selection-start-column="61" selection-end-line="15" selection-end-column="61" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="draggablePointsManager.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/factories/draggablePointsManager.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="60" column="28" lean-forward="false" selection-start-line="60" selection-start-column="28" selection-end-line="60" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -57,8 +89,8 @@
       <file leaf-file-name="floorplansManager.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/factories/floorplansManager.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1269">
-              <caret line="109" column="113" lean-forward="false" selection-start-line="109" selection-start-column="113" selection-end-line="109" selection-end-column="113" />
+            <state relative-caret-position="621">
+              <caret line="23" column="4" lean-forward="false" selection-start-line="23" selection-start-column="4" selection-end-line="24" selection-end-column="51" />
               <folding />
             </state>
           </provider>
@@ -67,7 +99,7 @@
       <file leaf-file-name="glControls.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/directives/glControls.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2747">
+            <state relative-caret-position="1829">
               <caret line="186" column="4" lean-forward="false" selection-start-line="186" selection-start-column="4" selection-end-line="186" selection-end-column="4" />
               <folding />
             </state>
@@ -84,21 +116,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1107">
-              <caret line="41" column="27" lean-forward="false" selection-start-line="41" selection-start-column="27" selection-end-line="41" selection-end-column="27" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="mapboxglLess.less" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/less/mapboxglLess.less">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1478">
-              <caret line="80" column="20" lean-forward="false" selection-start-line="80" selection-start-column="20" selection-end-line="80" selection-end-column="20" />
+            <state relative-caret-position="3834">
+              <caret line="142" column="33" lean-forward="false" selection-start-line="142" selection-start-column="33" selection-end-line="142" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -107,8 +129,8 @@
       <file leaf-file-name="markersManager.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/factories/markersManager.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1458">
-              <caret line="54" column="7" lean-forward="false" selection-start-line="54" selection-start-column="7" selection-end-line="54" selection-end-column="7" />
+            <state relative-caret-position="783">
+              <caret line="29" column="124" lean-forward="false" selection-start-line="29" selection-start-column="78" selection-end-line="29" selection-end-column="124" />
               <folding />
             </state>
           </provider>
@@ -117,7 +139,7 @@
       <file leaf-file-name="popupsManager.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/factories/popupsManager.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="827">
+            <state relative-caret-position="3321">
               <caret line="123" column="42" lean-forward="false" selection-start-line="123" selection-start-column="42" selection-end-line="123" selection-end-column="42" />
               <folding />
             </state>
@@ -128,7 +150,7 @@
         <entry file="file://$PROJECT_DIR$/src/factories/circlesManager.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="648">
-              <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+              <caret line="24" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -137,13 +159,9 @@
       <file leaf-file-name="glLayerControls.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/directives/glLayerControls.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1350">
-              <caret line="50" column="0" lean-forward="false" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-              <folding>
-                <marker date="1510045750941" expanded="true" signature="66:2826" ph="[...]" />
-                <marker date="1510045750941" expanded="true" signature="79:2825" ph="{...}" />
-                <marker date="1510045750941" expanded="true" signature="162:2648" ph="{...}" />
-              </folding>
+            <state relative-caret-position="1485">
+              <caret line="55" column="61" lean-forward="false" selection-start-line="55" selection-start-column="61" selection-end-line="55" selection-end-column="61" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -151,8 +169,8 @@
       <file leaf-file-name="mapboxgl.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/directives/mapboxgl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1181">
-              <caret line="302" column="10" lean-forward="false" selection-start-line="302" selection-start-column="10" selection-end-line="302" selection-end-column="10" />
+            <state relative-caret-position="1154">
+              <caret line="300" column="29" lean-forward="false" selection-start-line="300" selection-start-column="29" selection-end-line="300" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -181,8 +199,8 @@
       <file leaf-file-name="mapboxglConstants.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/constants/mapboxglConstants.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="27">
-              <caret line="1" column="15" lean-forward="false" selection-start-line="1" selection-start-column="15" selection-end-line="1" selection-end-column="15" />
+            <state relative-caret-position="108">
+              <caret line="4" column="10" lean-forward="false" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -200,9 +218,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>controlsCreated</find>
-      <find>.</find>
-      <find>./co</find>
       <find>./compo</find>
       <find>./compose</find>
       <find>m</find>
@@ -230,6 +245,9 @@
       <find>coordinat</find>
       <find>coordinate</find>
       <find>coordinates</find>
+      <find>DOM.setTransform(this._element</find>
+      <find>circle</find>
+      <find>marker</find>
     </findStrings>
     <dirStrings>
       <dir>C:\plugins\angular-mapboxgl-directive</dir>
@@ -245,23 +263,25 @@
         <option value="$PROJECT_DIR$/src/directives/glCircles.js" />
         <option value="$PROJECT_DIR$/.jshintrc" />
         <option value="$PROJECT_DIR$/src/factories/utils.js" />
-        <option value="$PROJECT_DIR$/src/directives/glMarkers.js" />
         <option value="$PROJECT_DIR$/src/directives/glLayersControls.js" />
         <option value="$PROJECT_DIR$/src/directives/glControls.js" />
         <option value="$PROJECT_DIR$/grunt/copy.json" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/grunt/aliases.json" />
-        <option value="$PROJECT_DIR$/src/directives/mapboxgl.js" />
-        <option value="$PROJECT_DIR$/src/directives/glLayerControls.js" />
         <option value="$PROJECT_DIR$/src/factories/circlesManager.js" />
-        <option value="$PROJECT_DIR$/public/app.js" />
         <option value="$PROJECT_DIR$/src/directives/glCenter.js" />
         <option value="$PROJECT_DIR$/src/factories/markersManager.js" />
         <option value="$PROJECT_DIR$/src/factories/popupsManager.js" />
-        <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/src/less/mapboxglLess.less" />
+        <option value="$PROJECT_DIR$/src/directives/glMarkers.js" />
         <option value="$PROJECT_DIR$/src/directives/glFloorplans.js" />
         <option value="$PROJECT_DIR$/src/factories/floorplansManager.js" />
+        <option value="$PROJECT_DIR$/src/directives/glLayerControls.js" />
+        <option value="$PROJECT_DIR$/src/directives/glDraggablePoints.js" />
+        <option value="$PROJECT_DIR$/src/factories/draggablePointsManager.js" />
+        <option value="$PROJECT_DIR$/src/directives/mapboxgl.js" />
+        <option value="$PROJECT_DIR$/public/index.html" />
+        <option value="$PROJECT_DIR$/public/app.js" />
         <option value="$PROJECT_DIR$/bower.json" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/constants/mapboxglConstants.js" />
@@ -302,7 +322,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -312,6 +331,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="angular-mapboxgl-directive" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="angular-mapboxgl-directive" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="angular-mapboxgl-directive" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vendor" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -401,8 +434,27 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="angular-mapboxgl-directive" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="angular-mapboxgl-directive" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="img" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -508,12 +560,15 @@
       <workItem from="1506348753607" duration="5825000" />
       <workItem from="1506413069161" duration="5956000" />
       <workItem from="1509961093391" duration="14655000" />
-      <workItem from="1510044942120" duration="7564000" />
+      <workItem from="1510044942120" duration="8462000" />
+      <workItem from="1510056032644" duration="3499000" />
+      <workItem from="1510131534462" duration="7894000" />
+      <workItem from="1510217168273" duration="2778000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="88592000" />
+    <option name="totallyTimeSpent" value="103661000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="3862" height="2122" extended-state="6" />
@@ -523,7 +578,6 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Grunt " active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -536,6 +590,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -550,35 +605,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/grunt/jshint.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package-lock.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3726">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/factories/mapboxglImageUtils.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/factories/sourcesManager.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -619,13 +645,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/directives/glMarkers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="837">
-          <caret line="31" column="7" lean-forward="false" selection-start-line="25" selection-start-column="4" selection-end-line="31" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -682,7 +701,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="783">
           <caret line="29" column="55" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="138" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -788,19 +806,53 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/factories/popupsManager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3321">
+          <caret line="123" column="42" lean-forward="false" selection-start-line="123" selection-start-column="42" selection-end-line="123" selection-end-column="42" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/less/mapboxglLess.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3834">
+          <caret line="142" column="33" lean-forward="false" selection-start-line="142" selection-start-column="33" selection-end-line="142" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/mapbox-gl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64044">
+          <caret line="392" column="2047" lean-forward="false" selection-start-line="392" selection-start-column="2017" selection-end-line="392" selection-end-column="2047" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/directives/glLayerControls.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1350">
-          <caret line="50" column="0" lean-forward="false" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-          <folding>
-            <marker date="1510045750941" expanded="true" signature="66:2826" ph="[...]" />
-            <marker date="1510045750941" expanded="true" signature="79:2825" ph="{...}" />
-            <marker date="1510045750941" expanded="true" signature="162:2648" ph="{...}" />
-          </folding>
+        <state relative-caret-position="1485">
+          <caret line="55" column="61" lean-forward="false" selection-start-line="55" selection-start-column="61" selection-end-line="55" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/directives/glMarkers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="16" column="45" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/directives/glFloorplans.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="15" column="51" lean-forward="false" selection-start-line="15" selection-start-column="51" selection-end-line="15" selection-end-column="51" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -815,39 +867,23 @@
     <entry file="file://$PROJECT_DIR$/src/factories/circlesManager.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="648">
-          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/directives/mapboxgl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1181">
-          <caret line="302" column="10" lean-forward="false" selection-start-line="302" selection-start-column="10" selection-end-line="302" selection-end-column="10" />
+          <caret line="24" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/factories/markersManager.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1458">
-          <caret line="54" column="7" lean-forward="false" selection-start-line="54" selection-start-column="7" selection-end-line="54" selection-end-column="7" />
+        <state relative-caret-position="783">
+          <caret line="29" column="124" lean-forward="false" selection-start-line="29" selection-start-column="78" selection-end-line="29" selection-end-column="124" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/factories/popupsManager.js">
+    <entry file="file://$PROJECT_DIR$/src/directives/glControls.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="827">
-          <caret line="123" column="42" lean-forward="false" selection-start-line="123" selection-start-column="42" selection-end-line="123" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/less/mapboxglLess.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1478">
-          <caret line="80" column="20" lean-forward="false" selection-start-line="80" selection-start-column="20" selection-end-line="80" selection-end-column="20" />
+        <state relative-caret-position="1829">
+          <caret line="186" column="4" lean-forward="false" selection-start-line="186" selection-start-column="4" selection-end-line="186" selection-end-column="4" />
           <folding />
         </state>
       </provider>
@@ -860,42 +896,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/directives/glControls.js">
+    <entry file="file://$PROJECT_DIR$/src/directives/glLights.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2747">
-          <caret line="186" column="4" lean-forward="false" selection-start-line="186" selection-start-column="4" selection-end-line="186" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1107">
-          <caret line="41" column="27" lean-forward="false" selection-start-line="41" selection-start-column="27" selection-end-line="41" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="695">
-          <caret line="113" column="16" lean-forward="false" selection-start-line="113" selection-start-column="16" selection-end-line="113" selection-end-column="121" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/directives/glFloorplans.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="15" column="51" lean-forward="false" selection-start-line="15" selection-start-column="51" selection-end-line="15" selection-end-column="51" />
+        <state relative-caret-position="729">
+          <caret line="27" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/factories/floorplansManager.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1269">
-          <caret line="109" column="113" lean-forward="false" selection-start-line="109" selection-start-column="113" selection-end-line="109" selection-end-column="113" />
+        <state relative-caret-position="621">
+          <caret line="23" column="4" lean-forward="false" selection-start-line="23" selection-start-column="4" selection-end-line="24" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/factories/draggablePointsManager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="60" column="28" lean-forward="false" selection-start-line="60" selection-start-column="28" selection-end-line="60" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/directives/glDraggablePoints.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="15" column="61" lean-forward="false" selection-start-line="15" selection-start-column="61" selection-end-line="15" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/directives/mapboxgl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1154">
+          <caret line="300" column="29" lean-forward="false" selection-start-line="300" selection-start-column="29" selection-end-line="300" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1026">
+          <caret line="38" column="47" lean-forward="false" selection-start-line="38" selection-start-column="47" selection-end-line="38" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1532">
+          <caret line="172" column="9" lean-forward="false" selection-start-line="172" selection-start-column="9" selection-end-line="172" selection-end-column="9" />
           <folding />
         </state>
       </provider>
@@ -918,8 +970,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/constants/mapboxglConstants.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="1" column="15" lean-forward="false" selection-start-line="1" selection-start-column="15" selection-end-line="1" selection-end-column="15" />
+        <state relative-caret-position="108">
+          <caret line="4" column="10" lean-forward="false" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
           <folding />
         </state>
       </provider>

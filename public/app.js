@@ -106,7 +106,8 @@
         coordinates: [[38.90, -77.02], [38.91, -77.02], [38.90, -77.01], [38.91, -77.01]],
         id: 'floorplan01',
         name: 'Floor 1',
-        editable: false
+        editable: false,
+        visible: false
       }];
 
       setTimeout(function(){
@@ -115,31 +116,32 @@
           coordinates: [[38.90, -77.04], [38.91, -77.04], [38.90, -77.03], [38.91, -77.03]],
           id: 'floorplan02',
           name: 'Floor 2',
-          editable: true
+          editable: true,
+          visible: true
         });
         $scope.$apply();
       }, 3000);
 
       var el = document.createElement('div');
       el.className = 'marker';
-      el.style.backgroundImage = 'url(https://placekitten.com/g/60/60/)';
-      el.style.width = '60px';
-      el.style.height = '60px';
+      el.style.backgroundImage = 'url(img/ibeacon_custom_marker.png)';
+      el.style.width = '200px';
+      el.style.height = '123px';
       el.style.cursor = 'pointer';
 
       var el2 = document.createElement('div');
       el2.className = 'marker';
-      el2.style.backgroundImage = 'url(https://placekitten.com/g/50/50/)';
-      el2.style.width = '50px';
-      el2.style.height = '50px';
+      el.style.backgroundImage = 'url(img/ibeacon_custom_marker.png)';
+      el2.style.width = '200px';
+      el2.style.height = '123px';
       el2.style.cursor = 'pointer';
 
       $scope.glMarkers = [
         {
-          coordinates: [38.908, -77.04],
+          coordinates: [38.907, -77.03],
           element: el,
           options: {
-            offset: [-25, -25]
+            offset: [-100, -123]
           },
           popup: {
             enabled: true,
@@ -153,9 +155,22 @@
           }
         }, {
           coordinates: [38.907, -77.03],
-          element: el2
+          element: el2,
+          options: {
+            offset: [-100, -123]
+          }
         }
       ];
+
+      $scope.glDraggablePoints = [{
+        coordinates: [38.915, -77.03],
+        name: 'Point 1',
+        id: 'pointid',
+        color: '#3887be',
+        hoverColor: '#3bb2d0',
+        radius: 10,
+        visible: true
+      }];
 
       $scope.glLayerControls = [{
         type: 'glMarkers',

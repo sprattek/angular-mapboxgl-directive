@@ -298,6 +298,7 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
       glCircles: '=',
       glMarkers: '=',
       glFloorplans: '=',
+      glDraggablePoints: '=',
       glMaxBounds: '=',
       glMaxZoom: '=',
       glMinZoom: '=',

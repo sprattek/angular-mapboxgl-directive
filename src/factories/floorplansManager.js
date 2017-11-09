@@ -39,7 +39,7 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       source: sourceId,
       type: 'raster',
       layout: {
-        'visibility': 'visible'
+        'visibility': object.visible ? 'visible' : 'none'
       },
       paint: {
         "raster-opacity": 0.65
@@ -116,7 +116,7 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
             source: drawing.properties.source_id,
             type: 'raster',
             layout: {
-              'visibility': 'visible'
+              'visibility': object.visible ? 'visible' : 'none'
             },
             paint: {
               "raster-opacity": 0.65
