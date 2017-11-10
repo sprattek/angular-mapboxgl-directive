@@ -1,10 +1,10 @@
 angular.module('mapboxgl-directive').directive('glCircles', ['CirclesManager', function (CirclesManager) {
   function mapboxGlCirclesDirectiveLink (scope, element, attrs, controller) {
     if (!controller) {
-			throw new Error('Invalid angular-mapboxgl-directive controller');
-		}
+      throw new Error('Invalid angular-mapboxgl-directive controller');
+    }
 
-		var mapboxglScope = controller.getMapboxGlScope();
+    var mapboxglScope = controller.getMapboxGlScope();
 
     var circlesWatched = function (circles) {
       if (angular.isDefined(circles)) {
@@ -37,12 +37,12 @@ angular.module('mapboxgl-directive').directive('glCircles', ['CirclesManager', f
   }
 
   var directive = {
-		restrict: 'A',
-		scope: false,
-		replace: false,
-		require: '?^mapboxgl',
-		link: mapboxGlCirclesDirectiveLink
-	};
+    restrict: 'A',
+    scope: false,
+    replace: false,
+    require: '?^mapboxgl',
+    link: mapboxGlCirclesDirectiveLink
+  };
 
-	return directive;
+  return directive;
 }]);

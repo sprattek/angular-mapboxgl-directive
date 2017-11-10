@@ -91,7 +91,7 @@
       };
 
       $scope.glCircles = [{
-        coordinates: [38.907, -77.04],
+        coordinates: [38.901, -77.06],
         radius: 350,
         options: editableOpts,
         id: 'circle01'
@@ -99,6 +99,32 @@
         coordinates: [38.901, -77.02],
         radius: 210,
         options: nonEditableOpts
+      }];
+
+      $scope.glPolygons = [{
+        id: 'polygon-id',
+        coordinates: [
+            [
+                48.606796446164374,
+                17.833145409822464
+            ],
+            [
+                48.60682304922701,
+                17.833270132541656
+            ],
+            [
+                48.607010157038246,
+                17.83319503068924
+            ],
+            [
+                48.60697823347967,
+                17.833072990179062
+            ]
+        ],
+        color: '#088',
+        opacity: 0.8,
+        visible: true,
+        editable: true
       }];
 
       $scope.glFloorplans = [{
@@ -179,6 +205,10 @@
       }, {
         type: 'glCircles',
         name: 'Geofences',
+        visible: true
+      }, {
+        type: 'glPolygons',
+        name: 'Polygons',
         visible: true
       }, {
         type: 'glFloorplans',

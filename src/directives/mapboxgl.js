@@ -296,6 +296,7 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
       glLayers: '=',
       glLights: '=',
       glCircles: '=',
+      glPolygons: '=',
       glMarkers: '=',
       glFloorplans: '=',
       glDraggablePoints: '=',

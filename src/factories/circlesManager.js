@@ -27,6 +27,15 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
 
     circle.addTo(this.mapInstance);
 
+    circle.on('centerchanged', function (circleObj) {
+      var center = circleObj.getCenter();
+      object.coordinates = [center.lat, center.lng];
+    });
+
+    circle.on('radiuschanged', function (circleObj) {
+      object.radius = circleObj.getRadius();
+    });
+
     this.circlesCreated.push({
       circleId: elementId,
       circleInstance: circle

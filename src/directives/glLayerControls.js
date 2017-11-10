@@ -24,23 +24,46 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
             var link = document.createElement('a');
             list_item.appendChild(link);
             link.href = '#';
-            link.className = 'active';
+            link.className = control.visible ? 'active' : '';
             link.textContent = control.name;
             link.id = control.type;
             layersCopy[control.type] = scope[control.type];
+
+            if (!control.visible) {
+              setTimeout(function(){
+                scope[control.type] = scope[control.type].map(function(item){
+                  if ((item.options && item.options.editable) || item.editable) {
+                    return item;
+                  } else {
+                    return null;
+                  }
+                });
+                scope[control.type] = scope[control.type].filter(function(n){ return n; });
+                scope.$apply();
+              }, 100);
+            }
 
             link.onclick = function (e) {
               var clickedLayer = this.textContent;
               e.preventDefault();
               e.stopPropagation();
 
-              if (scope[this.id].length > 0) {
+              if (this.className === 'active') {
                 this.className = '';
-                scope[this.id] = [];
+                scope[this.id] = scope[this.id].map(function(item){
+                  if ((item.options && item.options.editable) || item.editable) {
+                    return item;
+                  } else {
+                    return null;
+                  }
+                });
+                scope[this.id] = scope[this.id].filter(function(n){ return n; });
+                control.visible = true;
                 scope.$apply();
               } else {
                 this.className = 'active';
                 scope[this.id] = layersCopy[this.id];
+                control.visible = false;
                 scope.$apply();
               }
             };

@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.8 2017-11-09
+*  angular-mapboxgl-directive 0.40.8 2017-11-10
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -304,6 +304,7 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
       glLayers: '=',
       glLights: '=',
       glCircles: '=',
+      glPolygons: '=',
       glMarkers: '=',
       glFloorplans: '=',
       glDraggablePoints: '=',
@@ -586,6 +587,15 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
     var circle = new MapboxCircle([object.coordinates[1], object.coordinates[0]], object.radius, circleOptions);
 
     circle.addTo(this.mapInstance);
+
+    circle.on('centerchanged', function (circleObj) {
+      var center = circleObj.getCenter();
+      object.coordinates = [center.lat, center.lng];
+    });
+
+    circle.on('radiuschanged', function (circleObj) {
+      object.radius = circleObj.getRadius();
+    });
 
     this.circlesCreated.push({
       circleId: elementId,
@@ -1397,6 +1407,124 @@ angular.module('mapboxgl-directive').factory('MarkersManager', ['Utils', 'mapbox
   return MarkersManager;
 }]);
 
+angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
+  function PolygonsManager (mapInstance) {
+    this.polygonsCreated = [];
+    this.mapInstance = mapInstance;
+  }
+
+  PolygonsManager.prototype.createPolygonByObject = function (object, mapboxglDrawInstance) {
+    Utils.checkObjects([
+      {
+        name: 'Map',
+        object: this.mapInstance
+      }, {
+        name: 'Object',
+        object: object,
+        attributes: ['coordinates', 'id']
+      }
+    ]);
+
+    var elementId = object.id;
+    elementId = angular.isDefined(elementId) && elementId !== null ? elementId : Utils.generateGUID();
+
+    object.id = elementId;
+    const id = 'polygon-'+elementId;
+    const sourceId = 'polygon-source-'+elementId;
+
+    var c = angular.copy(object.coordinates);
+    c.push(object.coordinates[0]);
+    c = c.map(function(coordinate){
+      return [coordinate[1], coordinate[0]];
+    });
+
+    if (!object.editable) {
+      const options = {
+        'type': 'geojson',
+        'data': {
+          'type': 'Feature',
+          'geometry': {
+            'type': 'Polygon',
+            'coordinates': [c]
+          }
+        }
+      };
+
+      this.mapInstance.addSource(sourceId, options);
+
+      this.mapInstance.addLayer({
+        id: id,
+        source: sourceId,
+        type: 'fill',
+        layout: {
+          'visibility': object.visible ? 'visible' : 'none'
+        },
+        paint: {
+          'fill-color': object.color ? object.color : '#088',
+          'fill-opacity': object.opacity ? object.opacity : 0.8
+        }
+      });
+
+      this.polygonsCreated.push({
+        id: id,
+        sourceId: sourceId,
+        mapInstance: this.mapInstance
+      });
+    } else {
+      var feature = {
+        id: id,
+        type: 'Feature',
+        properties: {
+          object: object
+        },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [c]
+        }
+      };
+      var drawAdded = false;
+
+      this.mapInstance.on('render', function(data) {
+        if(data.target.loaded() && !drawAdded) {
+          var featureIds = mapboxglDrawInstance.add(feature);
+          mapboxglDrawInstance.changeMode('direct_select', {
+            featureId: featureIds[0]
+          });
+          drawAdded = true;
+        }
+      });
+
+      this.mapInstance.on('draw.update', function (e) {
+        const drawing = e.features[0];
+        if (drawing.properties.object && drawing.properties.object.editable) {
+
+          const c = drawing.geometry.coordinates[0];
+
+          object.coordinates =  c.map(function(coordinate){
+            return [coordinate[1], coordinate[0]];
+          });
+        }
+      });
+    }
+  };
+
+  PolygonsManager.prototype.removeAllPolygonsCreated = function () {
+    this.polygonsCreated.map(function (eachPolygon) {
+      if (eachPolygon.mapInstance.getSource(eachPolygon.sourceId)) {
+        eachPolygon.mapInstance.removeSource(eachPolygon.sourceId);
+      }
+
+      if (eachPolygon.mapInstance.getLayer(eachPolygon.id)) {
+        eachPolygon.mapInstance.removeLayer(eachPolygon.id);
+      }
+    });
+
+    this.polygonsCreated = [];
+  };
+
+  return PolygonsManager;
+}]);
+
 angular.module('mapboxgl-directive').factory('PopupsManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
   /*
 		/\$\{(.+?)\}/g --> Lorem ${ipsum} lorem ${ipsum} --> ['${ipsum}', '${ipsum}']
@@ -2081,10 +2209,10 @@ angular.module('mapboxgl-directive').directive('glCenter', ['Utils', 'mapboxglCo
 angular.module('mapboxgl-directive').directive('glCircles', ['CirclesManager', function (CirclesManager) {
   function mapboxGlCirclesDirectiveLink (scope, element, attrs, controller) {
     if (!controller) {
-			throw new Error('Invalid angular-mapboxgl-directive controller');
-		}
+      throw new Error('Invalid angular-mapboxgl-directive controller');
+    }
 
-		var mapboxglScope = controller.getMapboxGlScope();
+    var mapboxglScope = controller.getMapboxGlScope();
 
     var circlesWatched = function (circles) {
       if (angular.isDefined(circles)) {
@@ -2117,14 +2245,14 @@ angular.module('mapboxgl-directive').directive('glCircles', ['CirclesManager', f
   }
 
   var directive = {
-		restrict: 'A',
-		scope: false,
-		replace: false,
-		require: '?^mapboxgl',
-		link: mapboxGlCirclesDirectiveLink
-	};
+    restrict: 'A',
+    scope: false,
+    replace: false,
+    require: '?^mapboxgl',
+    link: mapboxGlCirclesDirectiveLink
+  };
 
-	return directive;
+  return directive;
 }]);
 
 angular.module('mapboxgl-directive').directive('glClasses', [function () {
@@ -2667,23 +2795,46 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
             var link = document.createElement('a');
             list_item.appendChild(link);
             link.href = '#';
-            link.className = 'active';
+            link.className = control.visible ? 'active' : '';
             link.textContent = control.name;
             link.id = control.type;
             layersCopy[control.type] = scope[control.type];
+
+            if (!control.visible) {
+              setTimeout(function(){
+                scope[control.type] = scope[control.type].map(function(item){
+                  if ((item.options && item.options.editable) || item.editable) {
+                    return item;
+                  } else {
+                    return null;
+                  }
+                });
+                scope[control.type] = scope[control.type].filter(function(n){ return n; });
+                scope.$apply();
+              }, 100);
+            }
 
             link.onclick = function (e) {
               var clickedLayer = this.textContent;
               e.preventDefault();
               e.stopPropagation();
 
-              if (scope[this.id].length > 0) {
+              if (this.className === 'active') {
                 this.className = '';
-                scope[this.id] = [];
+                scope[this.id] = scope[this.id].map(function(item){
+                  if ((item.options && item.options.editable) || item.editable) {
+                    return item;
+                  } else {
+                    return null;
+                  }
+                });
+                scope[this.id] = scope[this.id].filter(function(n){ return n; });
+                control.visible = true;
                 scope.$apply();
               } else {
                 this.className = 'active';
                 scope[this.id] = layersCopy[this.id];
+                control.visible = false;
                 scope.$apply();
               }
             };
@@ -3154,6 +3305,61 @@ angular.module('mapboxgl-directive').directive('glPitch', [function () {
 	};
 
 	return directive;
+}]);
+
+angular.module('mapboxgl-directive').directive('glPolygons', ['PolygonsManager', function (PolygonsManager) {
+  function mapboxGlPolygonsDirectiveLink (scope, element, attrs, controller) {
+    if (!controller) {
+      throw new Error('Invalid angular-mapboxgl-directive controller');
+    }
+
+    var mapboxglScope = controller.getMapboxGlScope();
+
+    var polygonsWatched = function (polygons, mapboxglDrawInstance) {
+      if (angular.isDefined(polygons)) {
+        scope.polygonManager.removeAllPolygonsCreated();
+
+        if (Object.prototype.toString.call(polygons) === Object.prototype.toString.call({})) {
+          scope.polygonManager.createPolygonByObject(polygons, mapboxglDrawInstance);
+        } else if (Object.prototype.toString.call(polygons) === Object.prototype.toString.call([])) {
+          polygons.map(function (eachPolygon) {
+            scope.polygonManager.createPolygonByObject(eachPolygon, mapboxglDrawInstance);
+          });
+        } else {
+          throw new Error('Invalid polygon parameter');
+        }
+      }
+    };
+
+    controller.getMap().then(function (map) {
+      scope.polygonManager = new PolygonsManager(map);
+
+      scope.$on('mapboxglMap:controlsRendered', function (event, controlsRendered) {
+        if (controlsRendered.draw) {
+          var mapboxglDrawInstance = controlsRendered.draw.control;
+
+          mapboxglScope.$watchCollection('glPolygons', function (polygons) {
+            polygonsWatched(polygons, mapboxglDrawInstance);
+          });
+        }
+      });
+    });
+
+    scope.$on('$destroy', function () {
+      // ToDo: remove all polygons
+      scope.polygonManager.removeAllPolygonsCreated();
+    });
+  }
+
+  var directive = {
+    restrict: 'A',
+    scope: false,
+    replace: false,
+    require: '?^mapboxgl',
+    link: mapboxGlPolygonsDirectiveLink
+  };
+
+  return directive;
 }]);
 
 angular.module('mapboxgl-directive').directive('glPopups', [function () {
