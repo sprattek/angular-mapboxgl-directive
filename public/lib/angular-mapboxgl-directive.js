@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.11 2017-11-23
+*  angular-mapboxgl-directive 0.40.12 2017-11-23
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -862,7 +862,7 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
           angular.forEach(c, function(corner){
             var popup = new mapboxgl.Popup({closeButton: false, closeOnClick: false})
               .setLngLat([corner[1], corner[0]])
-              .setHTML('<p><strong>Latitude: </strong> '+ corner[1].toFixed(7) + ', <strong>Longitude: </strong>' + corner[0].toFixed(7) +'</p>')
+              .setHTML('<p><strong>Latitude: </strong> '+ corner[0].toFixed(7) + ', <strong>Longitude: </strong>' + corner[1].toFixed(7) +'</p>')
               .addTo(map);
             self.popupsCreated.push(popup);
           });
@@ -937,7 +937,14 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       }
     });
 
+    if (this.popupsCreated.length > 0) {
+      angular.forEach(this.popupsCreated, function(popup){
+        popup.remove();
+      });
+    }
+
     this.floorplansCreated = [];
+    this.popupsCreated = [];
   };
 
   return FloorplansManager;
@@ -2131,10 +2138,10 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.11',
+	full: '0.40.12',
 	major: 0,
 	minor: 40,
-	patch: 11
+	patch: 12
 });
 
 angular.module('mapboxgl-directive').constant('mapboxglConstants', {

@@ -91,7 +91,7 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
           angular.forEach(c, function(corner){
             var popup = new mapboxgl.Popup({closeButton: false, closeOnClick: false})
               .setLngLat([corner[1], corner[0]])
-              .setHTML('<p><strong>Latitude: </strong> '+ corner[1].toFixed(7) + ', <strong>Longitude: </strong>' + corner[0].toFixed(7) +'</p>')
+              .setHTML('<p><strong>Latitude: </strong> '+ corner[0].toFixed(7) + ', <strong>Longitude: </strong>' + corner[1].toFixed(7) +'</p>')
               .addTo(map);
             self.popupsCreated.push(popup);
           });
@@ -166,7 +166,14 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       }
     });
 
+    if (this.popupsCreated.length > 0) {
+      angular.forEach(this.popupsCreated, function(popup){
+        popup.remove();
+      });
+    }
+
     this.floorplansCreated = [];
+    this.popupsCreated = [];
   };
 
   return FloorplansManager;

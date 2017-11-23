@@ -11,7 +11,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.min.js" afterPath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/constants/mapboxglConstants.js" afterPath="$PROJECT_DIR$/src/constants/mapboxglConstants.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/factories/floorplansManager.js" afterPath="$PROJECT_DIR$/src/factories/floorplansManager.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/factories/popupsManager.js" afterPath="$PROJECT_DIR$/src/factories/popupsManager.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -189,8 +188,8 @@
       <file leaf-file-name="mapboxglConstants.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/constants/mapboxglConstants.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="27">
-              <caret line="1" column="16" lean-forward="false" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+            <state relative-caret-position="108">
+              <caret line="4" column="11" lean-forward="false" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
               <folding />
             </state>
           </provider>
@@ -240,7 +239,7 @@
         <entry file="file://$PROJECT_DIR$/src/factories/popupsManager.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="540">
-              <caret line="113" column="57" lean-forward="true" selection-start-line="113" selection-start-column="16" selection-end-line="113" selection-end-column="57" />
+              <caret line="113" column="57" lean-forward="false" selection-start-line="113" selection-start-column="16" selection-end-line="113" selection-end-column="57" />
               <folding />
             </state>
           </provider>
@@ -249,8 +248,8 @@
       <file leaf-file-name="floorplansManager.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/factories/floorplansManager.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1404">
-              <caret line="138" column="14" lean-forward="true" selection-start-line="138" selection-start-column="14" selection-end-line="138" selection-end-column="14" />
+            <state relative-caret-position="2072">
+              <caret line="175" column="28" lean-forward="false" selection-start-line="175" selection-start-column="28" selection-end-line="175" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -572,12 +571,12 @@
       <workItem from="1510303337340" duration="8506000" />
       <workItem from="1510562885055" duration="20000" />
       <workItem from="1511174869984" duration="615000" />
-      <workItem from="1511433186895" duration="7285000" />
+      <workItem from="1511433186895" duration="9335000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="138149000" />
+    <option name="totallyTimeSpent" value="140199000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="3862" height="2122" extended-state="6" />
@@ -930,7 +929,7 @@
         <state relative-caret-position="34538">
           <caret line="2974" column="14" lean-forward="false" selection-start-line="2974" selection-start-column="14" selection-end-line="2974" selection-end-column="14" />
           <folding>
-            <marker date="1511445773571" expanded="true" signature="87896:87915" ph="{&quot;restrict&quot;: 'A'...}" />
+            <marker date="1511451854739" expanded="true" signature="88066:88085" ph="{&quot;restrict&quot;: 'A'...}" />
           </folding>
         </state>
       </provider>
@@ -962,15 +961,15 @@
     <entry file="file://$PROJECT_DIR$/src/factories/popupsManager.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
-          <caret line="113" column="57" lean-forward="true" selection-start-line="113" selection-start-column="16" selection-end-line="113" selection-end-column="57" />
+          <caret line="113" column="57" lean-forward="false" selection-start-line="113" selection-start-column="16" selection-end-line="113" selection-end-column="57" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/factories/floorplansManager.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1404">
-          <caret line="138" column="14" lean-forward="true" selection-start-line="138" selection-start-column="14" selection-end-line="138" selection-end-column="14" />
+        <state relative-caret-position="2072">
+          <caret line="175" column="28" lean-forward="false" selection-start-line="175" selection-start-column="28" selection-end-line="175" selection-end-column="28" />
           <folding />
         </state>
       </provider>
@@ -993,8 +992,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/constants/mapboxglConstants.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="1" column="16" lean-forward="false" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+        <state relative-caret-position="108">
+          <caret line="4" column="11" lean-forward="false" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
           <folding />
         </state>
       </provider>
