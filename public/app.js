@@ -188,6 +188,15 @@
         }
       ];
 
+      $scope.glPopups = [{
+        coordinates: [38.915, -77.03],
+        message: '<p><strong>Latitude: </strong> 38.915, <strong>Longitude: </strong>-77.03</p>',
+        options: {
+          closeButton: false,
+          closeOnClick: false
+        }
+      }];
+
       $scope.glDraggablePoints = [{
         coordinates: [38.915, -77.03],
         name: 'Point 1',

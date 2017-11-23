@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.8 2017-11-10
+*  angular-mapboxgl-directive 0.40.10 2017-11-23
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -307,6 +307,7 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
       glPolygons: '=',
       glMarkers: '=',
       glFloorplans: '=',
+      glGeojsons: '=',
       glDraggablePoints: '=',
       glMaxBounds: '=',
       glMaxZoom: '=',
@@ -913,6 +914,89 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
   };
 
   return FloorplansManager;
+}]);
+
+angular.module('mapboxgl-directive').factory('GeojsonsManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
+  function GeojsonsManager (mapInstance) {
+    this.geojsonsCreated = [];
+    this.mapInstance = mapInstance;
+  }
+
+  GeojsonsManager.prototype.createGeojsonByObject = function (object) {
+    Utils.checkObjects([
+      {
+        name: 'Map',
+        object: this.mapInstance
+      }, {
+        name: 'Object',
+        object: object,
+        attributes: ['data', 'id']
+      }
+    ]);
+
+    var elementId = object.id;
+    elementId = angular.isDefined(elementId) && elementId !== null ? elementId : Utils.generateGUID();
+
+    object.id = elementId;
+    const id = elementId;
+    const sourceId = 'source-'+elementId;
+
+    const options = {
+      'type': 'geojson',
+      'data': object.data
+    };
+
+    this.mapInstance.addSource(sourceId, options);
+
+    this.mapInstance.addLayer({
+      id: 'route-path-layer',
+      type: "line",
+      source: sourceId,
+      paint: {
+        "line-opacity": 0.9,
+        "line-color": "#0080c0",
+        "line-width": 8
+      },
+      filter: ["==", "$type", "LineString"]
+    });
+
+    this.mapInstance.addLayer({
+      id: 'polygon-layer',
+      type: "fill",
+      source: sourceId,
+      paint: {
+        "fill-color": "#8F8"
+      },
+      filter: ["==", "$type", "Polygon"]
+    });
+
+    this.geojsonsCreated.push({
+      id: 'route-path-layer',
+      sourceId: sourceId,
+      mapInstance: this.mapInstance
+    }, {
+      id: 'polygon-layer',
+      sourceId: sourceId,
+      mapInstance: this.mapInstance
+    });
+
+  };
+
+  GeojsonsManager.prototype.removeAllGeojsonsCreated = function () {
+    this.geojsonsCreated.map(function (eachGeojson) {
+      if (eachGeojson.mapInstance.getSource(eachGeojson.sourceId)) {
+        eachGeojson.mapInstance.removeSource(eachGeojson.sourceId);
+      }
+
+      if (eachGeojson.mapInstance.getLayer(eachGeojson.id)) {
+        eachGeojson.mapInstance.removeLayer(eachGeojson.id);
+      }
+    });
+
+    this.geojsonsCreated = [];
+  };
+
+  return GeojsonsManager;
 }]);
 
 angular.module('mapboxgl-directive').factory('LayersManager', ['Utils', 'mapboxglConstants', function (Utils, mapboxglConstants) {
@@ -1648,8 +1732,10 @@ angular.module('mapboxgl-directive').factory('PopupsManager', ['Utils', 'mapboxg
       }
 
       if (popupCoordinates !== 'center') {
-        popup.setLngLat(popupCoordinates);
+        popup.setLngLat([popupCoordinates[1], popupCoordinates[0]]);
       }
+
+      console.log(popupCoordinates);
     }
 
 		if (angular.isDefined(object.onClose) && object.onClose !== null && angular.isFunction(object.onClose)) {
@@ -2020,10 +2106,10 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.8',
+	full: '0.40.10',
 	major: 0,
 	minor: 40,
-	patch: 8
+	patch: 10
 });
 
 angular.module('mapboxgl-directive').constant('mapboxglConstants', {
@@ -2619,6 +2705,55 @@ angular.module('mapboxgl-directive').directive('glFloorplans', ['FloorplansManag
     replace: false,
     require: '?^mapboxgl',
     link: mapboxGlFloorplansDirectiveLink
+  };
+
+  return directive;
+}]);
+
+angular.module('mapboxgl-directive').directive('glGeojsons', ['GeojsonsManager', function (GeojsonsManager) {
+  function mapboxGlGeojsonsDirectiveLink (scope, element, attrs, controller) {
+    if (!controller) {
+      throw new Error('Invalid angular-mapboxgl-directive controller');
+    }
+
+    var mapboxglScope = controller.getMapboxGlScope();
+
+    var geojsonsWatched = function (geojsons) {
+      if (angular.isDefined(geojsons)) {
+        scope.geojsonManager.removeAllGeojsonsCreated();
+
+        if (Object.prototype.toString.call(geojsons) === Object.prototype.toString.call({})) {
+          scope.geojsonManager.createGeojsonByObject(geojsons);
+        } else if (Object.prototype.toString.call(geojsons) === Object.prototype.toString.call([])) {
+          geojsons.map(function (eachGeojson) {
+            scope.geojsonManager.createGeojsonByObject(eachGeojson);
+          });
+        } else {
+          throw new Error('Invalid geojson parameter');
+        }
+      }
+    };
+
+    controller.getMap().then(function (map) {
+      scope.geojsonManager = new GeojsonsManager(map);
+
+      mapboxglScope.$watchCollection('glGeojsons', function (geojsons) {
+        geojsonsWatched(geojsons);
+      });
+    });
+
+    scope.$on('$destroy', function () {
+      // ToDo: remove all geojsons
+      scope.geojsonManager.removeAllGeojsonsCreated();
+    });
+  }
+
+  var directive = {
+    restrict: 'A',
+    scope: false,
+    replace: false,
+    require: '?^mapboxgl',
+    link: mapboxGlGeojsonsDirectiveLink
   };
 
   return directive;
