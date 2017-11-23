@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.10 2017-11-23
+*  angular-mapboxgl-directive 0.40.11 2017-11-23
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -772,6 +772,7 @@ angular.module('mapboxgl-directive').factory('DraggablePointsManager', ['Utils',
 angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
   function FloorplansManager (mapInstance) {
     this.floorplansCreated = [];
+    this.popupsCreated = [];
     this.mapInstance = mapInstance;
   }
 
@@ -803,6 +804,8 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       coordinates: [[c[0][1], c[0][0]], [c[1][1], c[1][0]], [c[3][1], c[3][0]], [c[2][1], c[2][0]]]
     };
 
+    const map = this.mapInstance;
+
     this.mapInstance.addSource(sourceId, options);
 
     this.mapInstance.addLayer({
@@ -815,7 +818,7 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       paint: {
         "raster-opacity": 0.65
       }
-    }, 'directions-route-line');
+    }, 'country_label_1');
 
     this.floorplansCreated.push({
       id: id,
@@ -847,6 +850,7 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       };
       var drawAdded = false;
 
+      var self = this;
       this.mapInstance.on('render', function(data) {
         if(data.target.loaded() && !drawAdded) {
           var featureIds = mapboxglDrawInstance.add(feature);
@@ -854,6 +858,15 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
             featureId: featureIds[0]
           });
           drawAdded = true;
+
+          angular.forEach(c, function(corner){
+            var popup = new mapboxgl.Popup({closeButton: false, closeOnClick: false})
+              .setLngLat([corner[1], corner[0]])
+              .setHTML('<p><strong>Latitude: </strong> '+ corner[1].toFixed(7) + ', <strong>Longitude: </strong>' + corner[0].toFixed(7) +'</p>')
+              .addTo(map);
+            self.popupsCreated.push(popup);
+          });
+
         }
       });
 
@@ -868,6 +881,12 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
 
           if (map.getLayer(drawing.properties.layer_id)) {
             map.removeLayer(drawing.properties.layer_id);
+          }
+
+          if (self.popupsCreated.length > 0) {
+            angular.forEach(self.popupsCreated, function(popup){
+              popup.remove();
+            });
           }
 
           const c = drawing.geometry.coordinates[0];
@@ -892,7 +911,15 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
             paint: {
               "raster-opacity": 0.65
             }
-          }, 'directions-route-line');
+          }, 'country_label_1');
+
+          angular.forEach(c, function(corner){
+            var popup = new mapboxgl.Popup({closeButton: false, closeOnClick: false})
+              .setLngLat(corner)
+              .setHTML('<p><strong>Latitude: </strong> '+ corner[1].toFixed(7) + ', <strong>Longitude: </strong>' + corner[0].toFixed(7) +'</p>')
+              .addTo(map);
+            self.popupsCreated.push(popup);
+          });
         }
       });
     }
@@ -1734,8 +1761,6 @@ angular.module('mapboxgl-directive').factory('PopupsManager', ['Utils', 'mapboxg
       if (popupCoordinates !== 'center') {
         popup.setLngLat([popupCoordinates[1], popupCoordinates[0]]);
       }
-
-      console.log(popupCoordinates);
     }
 
 		if (angular.isDefined(object.onClose) && object.onClose !== null && angular.isFunction(object.onClose)) {
@@ -2106,10 +2131,10 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.10',
+	full: '0.40.11',
 	major: 0,
 	minor: 40,
-	patch: 10
+	patch: 11
 });
 
 angular.module('mapboxgl-directive').constant('mapboxglConstants', {

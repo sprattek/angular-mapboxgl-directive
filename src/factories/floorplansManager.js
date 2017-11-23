@@ -1,6 +1,7 @@
 angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
   function FloorplansManager (mapInstance) {
     this.floorplansCreated = [];
+    this.popupsCreated = [];
     this.mapInstance = mapInstance;
   }
 
@@ -32,6 +33,8 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       coordinates: [[c[0][1], c[0][0]], [c[1][1], c[1][0]], [c[3][1], c[3][0]], [c[2][1], c[2][0]]]
     };
 
+    const map = this.mapInstance;
+
     this.mapInstance.addSource(sourceId, options);
 
     this.mapInstance.addLayer({
@@ -44,7 +47,7 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       paint: {
         "raster-opacity": 0.65
       }
-    }, 'directions-route-line');
+    }, 'country_label_1');
 
     this.floorplansCreated.push({
       id: id,
@@ -76,6 +79,7 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       };
       var drawAdded = false;
 
+      var self = this;
       this.mapInstance.on('render', function(data) {
         if(data.target.loaded() && !drawAdded) {
           var featureIds = mapboxglDrawInstance.add(feature);
@@ -83,6 +87,15 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
             featureId: featureIds[0]
           });
           drawAdded = true;
+
+          angular.forEach(c, function(corner){
+            var popup = new mapboxgl.Popup({closeButton: false, closeOnClick: false})
+              .setLngLat([corner[1], corner[0]])
+              .setHTML('<p><strong>Latitude: </strong> '+ corner[1].toFixed(7) + ', <strong>Longitude: </strong>' + corner[0].toFixed(7) +'</p>')
+              .addTo(map);
+            self.popupsCreated.push(popup);
+          });
+
         }
       });
 
@@ -97,6 +110,12 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
 
           if (map.getLayer(drawing.properties.layer_id)) {
             map.removeLayer(drawing.properties.layer_id);
+          }
+
+          if (self.popupsCreated.length > 0) {
+            angular.forEach(self.popupsCreated, function(popup){
+              popup.remove();
+            });
           }
 
           const c = drawing.geometry.coordinates[0];
@@ -121,7 +140,15 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
             paint: {
               "raster-opacity": 0.65
             }
-          }, 'directions-route-line');
+          }, 'country_label_1');
+
+          angular.forEach(c, function(corner){
+            var popup = new mapboxgl.Popup({closeButton: false, closeOnClick: false})
+              .setLngLat(corner)
+              .setHTML('<p><strong>Latitude: </strong> '+ corner[1].toFixed(7) + ', <strong>Longitude: </strong>' + corner[0].toFixed(7) +'</p>')
+              .addTo(map);
+            self.popupsCreated.push(popup);
+          });
         }
       });
     }

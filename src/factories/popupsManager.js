@@ -123,8 +123,6 @@ angular.module('mapboxgl-directive').factory('PopupsManager', ['Utils', 'mapboxg
       if (popupCoordinates !== 'center') {
         popup.setLngLat([popupCoordinates[1], popupCoordinates[0]]);
       }
-
-      console.log(popupCoordinates);
     }
 
 		if (angular.isDefined(object.onClose) && object.onClose !== null && angular.isFunction(object.onClose)) {
