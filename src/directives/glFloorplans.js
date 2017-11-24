@@ -7,7 +7,7 @@ angular.module('mapboxgl-directive').directive('glFloorplans', ['FloorplansManag
     var mapboxglScope = controller.getMapboxGlScope();
 
     var floorplansWatched = function (floorplans, mapboxglDrawInstance) {
-      if (angular.isDefined(floorplans)) {
+      if (angular.isDefined(floorplans) && scope.floorplanManager) {
         scope.floorplanManager.removeAllFloorplansCreated();
 
         if (Object.prototype.toString.call(floorplans) === Object.prototype.toString.call({})) {
@@ -23,16 +23,16 @@ angular.module('mapboxgl-directive').directive('glFloorplans', ['FloorplansManag
     };
 
     controller.getMap().then(function (map) {
-      scope.floorplanManager = new FloorplansManager(map);
       scope.$on('mapboxglMap:controlsRendered', function (event, controlsRendered) {
         if (controlsRendered.draw) {
           var mapboxglDrawInstance = controlsRendered.draw.control;
-
-          scope.$watchCollection('glFloorplans', function (floorplans) {
-            floorplansWatched(floorplans, mapboxglDrawInstance);
-          });
+          scope.floorplanManager = new FloorplansManager(map, mapboxglDrawInstance);
         }
       });
+
+      scope.$watch('glFloorplans', function (floorplans) {
+        floorplansWatched(floorplans);
+      }, true);
     });
 
     scope.$on('$destroy', function () {

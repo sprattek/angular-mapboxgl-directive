@@ -1,11 +1,12 @@
 angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
-  function FloorplansManager (mapInstance) {
+  function FloorplansManager (mapInstance, drawInstance) {
     this.floorplansCreated = [];
     this.popupsCreated = [];
     this.mapInstance = mapInstance;
+    this.drawInstance = drawInstance;
   }
 
-  FloorplansManager.prototype.createFloorplanByObject = function (object, mapboxglDrawInstance) {
+  FloorplansManager.prototype.createFloorplanByObject = function (object) {
     Utils.checkObjects([
       {
         name: 'Map',
@@ -82,8 +83,8 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       var self = this;
       this.mapInstance.on('render', function(data) {
         if(data.target.loaded() && !drawAdded) {
-          var featureIds = mapboxglDrawInstance.add(feature);
-          mapboxglDrawInstance.changeMode('direct_select', {
+          var featureIds = self.drawInstance.add(feature);
+          self.drawInstance.changeMode('direct_select', {
             featureId: featureIds[0]
           });
           drawAdded = true;

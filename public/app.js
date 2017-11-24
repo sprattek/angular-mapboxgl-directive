@@ -148,6 +148,18 @@
         $scope.$apply();
       }, 3000);
 
+      setTimeout(function(){
+        $scope.glFloorplans[1] = {
+          url: 'http://generva.com/5/2015/11/architecture-designs-custom-kitchen-draw-floorplan-kitchen-floor-planner.jpg',
+          coordinates: [[38.85, -77.04], [38.91, -77.04], [38.90, -77.03], [38.91, -77.03]],
+          id: 'floorplan02',
+          name: 'Floor 2',
+          editable: true,
+          visible: true
+        };
+        $scope.$apply();
+      }, 10000);
+
       var el = document.createElement('div');
       el.className = 'marker';
       el.style.backgroundImage = 'url(img/ibeacon_custom_marker.png)';
