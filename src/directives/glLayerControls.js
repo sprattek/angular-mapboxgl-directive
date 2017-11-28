@@ -74,6 +74,52 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
       }
     });
 
+    scope.$watchCollection('glCircles', function(circles){
+      if (circles && circles.length > 0) {
+        controller.getMap().then(function (map) {
+          var haveName = circles.filter(function (obj) { return obj.name; }).length > 0 ? true : false;
+
+          if (document.getElementById('circle-labels')) {
+            document.getElementById('circle-labels').remove();
+          }
+
+          if (haveName) {
+            var list_item = document.createElement('li');
+            var link = document.createElement('a');
+            list_item.appendChild(link);
+            link.href = '#';
+            link.className = 'active';
+            link.textContent = 'Geofence Labels';
+            link.id = 'circle-labels';
+
+            link.onclick = function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              var self = this;
+
+              angular.forEach(circles, function(control){
+                const id = control.id + '-label-layer';
+
+                if (map && map.getLayer(id)) {
+                  var visibility = map.getLayoutProperty(id, 'visibility');
+
+                  if (visibility === 'visible') {
+                    map.setLayoutProperty(id, 'visibility', 'none');
+                    self.className = '';
+                  } else {
+                    self.className = 'active';
+                    map.setLayoutProperty(id, 'visibility', 'visible');
+                  }
+                }
+              });
+            };
+
+            placeholder.insertBefore(list_item, placeholder.firstChild);
+          }
+        });
+      }
+    });
+
     scope.$watchCollection('glFloorplans', function(floorplans){
       if (floorplans && floorplans.length > 0) {
         controller.getMap().then(function (map) {

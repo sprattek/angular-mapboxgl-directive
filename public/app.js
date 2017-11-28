@@ -94,11 +94,14 @@
         coordinates: [38.901, -77.06],
         radius: 350,
         options: editableOpts,
-        id: 'circle01'
+        id: 'circle01',
+        name: 'Circle'
       }, {
         coordinates: [38.901, -77.02],
         radius: 210,
-        options: nonEditableOpts
+        options: nonEditableOpts,
+        id: 'circle02',
+        name: 'Another Circle'
       }];
 
       $scope.glPolygons = [{
@@ -128,7 +131,7 @@
       }];
 
       $scope.glFloorplans = [{
-        url: 'http://generva.com/5/2015/11/architecture-designs-custom-kitchen-draw-floorplan-kitchen-floor-planner.jpg',
+        url: 'img/floorplan.jpg',
         coordinates: [[38.90, -77.02], [38.91, -77.02], [38.90, -77.01], [38.91, -77.01]],
         id: 'floorplan01',
         name: 'Floor 1',
@@ -138,7 +141,7 @@
 
       setTimeout(function(){
         $scope.glFloorplans.push({
-          url: 'http://generva.com/5/2015/11/architecture-designs-custom-kitchen-draw-floorplan-kitchen-floor-planner.jpg',
+          url: 'img/floorplan.jpg',
           coordinates: [[38.90, -77.04], [38.91, -77.04], [38.90, -77.03], [38.91, -77.03]],
           id: 'floorplan02',
           name: 'Floor 2',
@@ -147,18 +150,6 @@
         });
         $scope.$apply();
       }, 3000);
-
-      setTimeout(function(){
-        $scope.glFloorplans[1] = {
-          url: 'http://generva.com/5/2015/11/architecture-designs-custom-kitchen-draw-floorplan-kitchen-floor-planner.jpg',
-          coordinates: [[38.85, -77.04], [38.91, -77.04], [38.90, -77.03], [38.91, -77.03]],
-          id: 'floorplan02',
-          name: 'Floor 2',
-          editable: true,
-          visible: true
-        };
-        $scope.$apply();
-      }, 10000);
 
       var el = document.createElement('div');
       el.className = 'marker';

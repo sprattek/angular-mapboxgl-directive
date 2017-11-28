@@ -20,6 +20,18 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
     elementId = angular.isDefined(elementId) && elementId !== null ? elementId : Utils.generateGUID();
 
     object.id = elementId;
+    var sourceId = elementId + '-label-source';
+    var layerId = elementId + '-label-layer';
+    var geojson = {
+      "type": "FeatureCollection",
+      "features": [{
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [object.coordinates[1], object.coordinates[0]]
+        }
+      }]
+    };
 
     var circleOptions = object.options || {};
 
@@ -35,6 +47,33 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
     circle.on('radiuschanged', function (circleObj) {
       object.radius = circleObj.getRadius();
     });
+
+    if (object.name) {
+      this.mapInstance.addSource(sourceId, {
+        "type": "geojson",
+        "data": geojson
+      });
+
+      this.mapInstance.addLayer({
+        "id": layerId,
+        "type": "symbol",
+        "source": sourceId,
+        "layout": {
+          'visibility': 'visible',
+          "text-field": object.name,
+          "text-font": ["Open Sans Regular"],
+          "text-size": 11,
+          "text-transform": "uppercase",
+          "text-letter-spacing": 0.05,
+          "text-offset": [0, 1]
+        },
+        "paint": {
+          "text-color": "#202",
+          "text-halo-color": "#fff",
+          "text-halo-width": 2
+        }
+      });
+    }
 
     this.circlesCreated.push({
       circleId: elementId,

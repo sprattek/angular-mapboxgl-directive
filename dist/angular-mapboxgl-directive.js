@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.13 2017-11-24
+*  angular-mapboxgl-directive 0.40.14 2017-11-28
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -582,6 +582,18 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
     elementId = angular.isDefined(elementId) && elementId !== null ? elementId : Utils.generateGUID();
 
     object.id = elementId;
+    var sourceId = elementId + '-label-source';
+    var layerId = elementId + '-label-layer';
+    var geojson = {
+      "type": "FeatureCollection",
+      "features": [{
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [object.coordinates[1], object.coordinates[0]]
+        }
+      }]
+    };
 
     var circleOptions = object.options || {};
 
@@ -597,6 +609,33 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
     circle.on('radiuschanged', function (circleObj) {
       object.radius = circleObj.getRadius();
     });
+
+    if (object.name) {
+      this.mapInstance.addSource(sourceId, {
+        "type": "geojson",
+        "data": geojson
+      });
+
+      this.mapInstance.addLayer({
+        "id": layerId,
+        "type": "symbol",
+        "source": sourceId,
+        "layout": {
+          'visibility': 'visible',
+          "text-field": object.name,
+          "text-font": ["Open Sans Regular"],
+          "text-size": 11,
+          "text-transform": "uppercase",
+          "text-letter-spacing": 0.05,
+          "text-offset": [0, 1]
+        },
+        "paint": {
+          "text-color": "#202",
+          "text-halo-color": "#fff",
+          "text-halo-width": 2
+        }
+      });
+    }
 
     this.circlesCreated.push({
       circleId: elementId,
@@ -2441,7 +2480,7 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.13',
+	full: '0.40.14',
 	major: 0,
 	minor: 40,
 	patch: 13
@@ -3311,6 +3350,52 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
 
             placeholder.appendChild(list_item);
           });
+        });
+      }
+    });
+
+    scope.$watchCollection('glCircles', function(circles){
+      if (circles && circles.length > 0) {
+        controller.getMap().then(function (map) {
+          var haveName = circles.filter(function (obj) { return obj.name; }).length > 0 ? true : false;
+
+          if (document.getElementById('circle-labels')) {
+            document.getElementById('circle-labels').remove();
+          }
+
+          if (haveName) {
+            var list_item = document.createElement('li');
+            var link = document.createElement('a');
+            list_item.appendChild(link);
+            link.href = '#';
+            link.className = 'active';
+            link.textContent = 'Geofence Labels';
+            link.id = 'circle-labels';
+
+            link.onclick = function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              var self = this;
+
+              angular.forEach(circles, function(control){
+                const id = control.id + '-label-layer';
+
+                if (map && map.getLayer(id)) {
+                  var visibility = map.getLayoutProperty(id, 'visibility');
+
+                  if (visibility === 'visible') {
+                    map.setLayoutProperty(id, 'visibility', 'none');
+                    self.className = '';
+                  } else {
+                    self.className = 'active';
+                    map.setLayoutProperty(id, 'visibility', 'visible');
+                  }
+                }
+              });
+            };
+
+            placeholder.insertBefore(list_item, placeholder.firstChild);
+          }
         });
       }
     });
