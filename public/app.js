@@ -127,7 +127,8 @@
         color: '#088',
         opacity: 0.8,
         visible: true,
-        editable: true
+        editable: true,
+        name: 'Polygon'
       }];
 
       $scope.glFloorplans = [{

@@ -75,12 +75,13 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
     });
 
     scope.$watchCollection('glCircles', function(circles){
-      if (circles && circles.length > 0) {
+      var geofences = circles.concat(scope.glPolygons);
+      if (geofences && geofences.length > 0) {
         controller.getMap().then(function (map) {
-          var haveName = circles.filter(function (obj) { return obj.name; }).length > 0 ? true : false;
+          var haveName = geofences.filter(function (obj) { return obj.name; }).length > 0 ? true : false;
 
-          if (document.getElementById('circle-labels')) {
-            document.getElementById('circle-labels').remove();
+          if (document.getElementById('geofence-labels')) {
+            document.getElementById('geofence-labels').remove();
           }
 
           if (haveName) {
@@ -90,14 +91,14 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
             link.href = '#';
             link.className = 'active';
             link.textContent = 'Geofence Labels';
-            link.id = 'circle-labels';
+            link.id = 'geofence-labels';
 
             link.onclick = function (e) {
               e.preventDefault();
               e.stopPropagation();
               var self = this;
 
-              angular.forEach(circles, function(control){
+              angular.forEach(geofences, function(control){
                 const id = control.id + '-label-layer';
 
                 if (map && map.getLayer(id)) {

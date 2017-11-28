@@ -1,6 +1,7 @@
 angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
   function CirclesManager (mapInstance) {
     this.circlesCreated = [];
+    this.labelsCreated = [];
     this.mapInstance = mapInstance;
   }
 
@@ -35,13 +36,33 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
 
     var circleOptions = object.options || {};
 
+    circleOptions.properties = {
+      id: elementId
+    };
+
     var circle = new MapboxCircle([object.coordinates[1], object.coordinates[0]], object.radius, circleOptions);
 
     circle.addTo(this.mapInstance);
 
+    var self = this;
     circle.on('centerchanged', function (circleObj) {
       var center = circleObj.getCenter();
       object.coordinates = [center.lat, center.lng];
+
+      var sourceId = object.options.properties.id + '-label-source';
+      var geojson = {
+        "type": "FeatureCollection",
+        "features": [{
+          "type": "Feature",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [center.lng, center.lat]
+          }
+        }]
+      };
+      if (self.mapInstance.getSource(sourceId)) {
+        self.mapInstance.getSource(sourceId).setData(geojson);
+      }
     });
 
     circle.on('radiuschanged', function (circleObj) {
@@ -79,6 +100,12 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
       circleId: elementId,
       circleInstance: circle
     });
+
+    this.labelsCreated.push({
+      id: layerId,
+      sourceId: sourceId,
+      mapInstance: this.mapInstance
+    });
   };
 
   CirclesManager.prototype.removeAllCirclesCreated = function () {
@@ -86,7 +113,18 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
       eachCircle.circleInstance.remove();
     });
 
+    this.labelsCreated.map(function (eachLabel) {
+      if (eachLabel.mapInstance.getSource(eachLabel.sourceId)) {
+        eachLabel.mapInstance.removeSource(eachLabel.sourceId);
+      }
+
+      if (eachLabel.mapInstance.getLayer(eachLabel.id)) {
+        eachLabel.mapInstance.removeLayer(eachLabel.id);
+      }
+    });
+
     this.circlesCreated = [];
+    this.labelsCreated = [];
   };
 
   return CirclesManager;

@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.14 2017-11-28
+*  angular-mapboxgl-directive 0.40.15 2017-11-28
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -563,6 +563,7 @@ angular.module('mapboxgl-directive').factory('AnimationsManager', ['$window', '$
 angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
   function CirclesManager (mapInstance) {
     this.circlesCreated = [];
+    this.labelsCreated = [];
     this.mapInstance = mapInstance;
   }
 
@@ -597,13 +598,33 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
 
     var circleOptions = object.options || {};
 
+    circleOptions.properties = {
+      id: elementId
+    };
+
     var circle = new MapboxCircle([object.coordinates[1], object.coordinates[0]], object.radius, circleOptions);
 
     circle.addTo(this.mapInstance);
 
+    var self = this;
     circle.on('centerchanged', function (circleObj) {
       var center = circleObj.getCenter();
       object.coordinates = [center.lat, center.lng];
+
+      var sourceId = object.options.properties.id + '-label-source';
+      var geojson = {
+        "type": "FeatureCollection",
+        "features": [{
+          "type": "Feature",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [center.lng, center.lat]
+          }
+        }]
+      };
+      if (self.mapInstance.getSource(sourceId)) {
+        self.mapInstance.getSource(sourceId).setData(geojson);
+      }
     });
 
     circle.on('radiuschanged', function (circleObj) {
@@ -641,6 +662,12 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
       circleId: elementId,
       circleInstance: circle
     });
+
+    this.labelsCreated.push({
+      id: layerId,
+      sourceId: sourceId,
+      mapInstance: this.mapInstance
+    });
   };
 
   CirclesManager.prototype.removeAllCirclesCreated = function () {
@@ -648,7 +675,18 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
       eachCircle.circleInstance.remove();
     });
 
+    this.labelsCreated.map(function (eachLabel) {
+      if (eachLabel.mapInstance.getSource(eachLabel.sourceId)) {
+        eachLabel.mapInstance.removeSource(eachLabel.sourceId);
+      }
+
+      if (eachLabel.mapInstance.getLayer(eachLabel.id)) {
+        eachLabel.mapInstance.removeLayer(eachLabel.id);
+      }
+    });
+
     this.circlesCreated = [];
+    this.labelsCreated = [];
   };
 
   return CirclesManager;
@@ -1870,6 +1908,7 @@ angular.module('mapboxgl-directive').factory('MarkersManager', ['Utils', 'mapbox
 angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
   function PolygonsManager (mapInstance) {
     this.polygonsCreated = [];
+    this.labelsCreated = [];
     this.mapInstance = mapInstance;
   }
 
@@ -1944,6 +1983,7 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
       };
       var drawAdded = false;
 
+      var self = this;
       this.mapInstance.on('render', function(data) {
         if(data.target.loaded() && !drawAdded) {
           var featureIds = mapboxglDrawInstance.add(feature);
@@ -1954,6 +1994,7 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
         }
       });
 
+
       this.mapInstance.on('draw.update', function (e) {
         const drawing = e.features[0];
         if (drawing.properties.object && drawing.properties.object.editable) {
@@ -1963,9 +2004,71 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
           object.coordinates =  c.map(function(coordinate){
             return [coordinate[1], coordinate[0]];
           });
+
+          var sourceId = drawing.properties.object.id + '-label-source';
+          var geojson = {
+            "type": "FeatureCollection",
+            "features": [{
+              "type": "Feature",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [object.coordinates[0][1], object.coordinates[0][0]]
+              }
+            }]
+          };
+          if (self.mapInstance.getSource(sourceId)) {
+            self.mapInstance.getSource(sourceId).setData(geojson);
+          }
         }
       });
     }
+
+    var sourceLabelId = elementId + '-label-source';
+    var layerLabelId = elementId + '-label-layer';
+    var geojson = {
+      "type": "FeatureCollection",
+      "features": [{
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [object.coordinates[0][1], object.coordinates[0][0]]
+        }
+      }]
+    };
+
+    if (object.name) {
+      this.mapInstance.addSource(sourceLabelId, {
+        "type": "geojson",
+        "data": geojson
+      });
+
+      this.mapInstance.addLayer({
+        "id": layerLabelId,
+        "type": "symbol",
+        "source": sourceLabelId,
+        "layout": {
+          'visibility': 'visible',
+          "text-field": object.name,
+          "text-font": ["Open Sans Regular"],
+          "text-size": 11,
+          "text-transform": "uppercase",
+          "text-letter-spacing": 0.05,
+          "text-offset": [0, 1]
+        },
+        "paint": {
+          "text-color": "#202",
+          "text-halo-color": "#fff",
+          "text-halo-width": 2
+        }
+      });
+
+      this.labelsCreated.push({
+        id: layerLabelId,
+        sourceId: sourceLabelId,
+        mapInstance: this.mapInstance
+      });
+    }
+
   };
 
   PolygonsManager.prototype.removeAllPolygonsCreated = function () {
@@ -1979,7 +2082,18 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
       }
     });
 
+    this.labelsCreated.map(function (eachLabel) {
+      if (eachLabel.mapInstance.getSource(eachLabel.sourceId)) {
+        eachLabel.mapInstance.removeSource(eachLabel.sourceId);
+      }
+
+      if (eachLabel.mapInstance.getLayer(eachLabel.id)) {
+        eachLabel.mapInstance.removeLayer(eachLabel.id);
+      }
+    });
+
     this.polygonsCreated = [];
+    this.labelsCreated = [];
   };
 
   return PolygonsManager;
@@ -2480,7 +2594,7 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.14',
+	full: '0.40.15',
 	major: 0,
 	minor: 40,
 	patch: 13
@@ -3355,12 +3469,13 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
     });
 
     scope.$watchCollection('glCircles', function(circles){
-      if (circles && circles.length > 0) {
+      var geofences = circles.concat(scope.glPolygons);
+      if (geofences && geofences.length > 0) {
         controller.getMap().then(function (map) {
-          var haveName = circles.filter(function (obj) { return obj.name; }).length > 0 ? true : false;
+          var haveName = geofences.filter(function (obj) { return obj.name; }).length > 0 ? true : false;
 
-          if (document.getElementById('circle-labels')) {
-            document.getElementById('circle-labels').remove();
+          if (document.getElementById('geofence-labels')) {
+            document.getElementById('geofence-labels').remove();
           }
 
           if (haveName) {
@@ -3370,14 +3485,14 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
             link.href = '#';
             link.className = 'active';
             link.textContent = 'Geofence Labels';
-            link.id = 'circle-labels';
+            link.id = 'geofence-labels';
 
             link.onclick = function (e) {
               e.preventDefault();
               e.stopPropagation();
               var self = this;
 
-              angular.forEach(circles, function(control){
+              angular.forEach(geofences, function(control){
                 const id = control.id + '-label-layer';
 
                 if (map && map.getLayer(id)) {

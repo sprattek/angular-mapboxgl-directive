@@ -1,6 +1,7 @@
 angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
   function PolygonsManager (mapInstance) {
     this.polygonsCreated = [];
+    this.labelsCreated = [];
     this.mapInstance = mapInstance;
   }
 
@@ -75,6 +76,7 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
       };
       var drawAdded = false;
 
+      var self = this;
       this.mapInstance.on('render', function(data) {
         if(data.target.loaded() && !drawAdded) {
           var featureIds = mapboxglDrawInstance.add(feature);
@@ -85,6 +87,7 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
         }
       });
 
+
       this.mapInstance.on('draw.update', function (e) {
         const drawing = e.features[0];
         if (drawing.properties.object && drawing.properties.object.editable) {
@@ -94,9 +97,71 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
           object.coordinates =  c.map(function(coordinate){
             return [coordinate[1], coordinate[0]];
           });
+
+          var sourceId = drawing.properties.object.id + '-label-source';
+          var geojson = {
+            "type": "FeatureCollection",
+            "features": [{
+              "type": "Feature",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [object.coordinates[0][1], object.coordinates[0][0]]
+              }
+            }]
+          };
+          if (self.mapInstance.getSource(sourceId)) {
+            self.mapInstance.getSource(sourceId).setData(geojson);
+          }
         }
       });
     }
+
+    var sourceLabelId = elementId + '-label-source';
+    var layerLabelId = elementId + '-label-layer';
+    var geojson = {
+      "type": "FeatureCollection",
+      "features": [{
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [object.coordinates[0][1], object.coordinates[0][0]]
+        }
+      }]
+    };
+
+    if (object.name) {
+      this.mapInstance.addSource(sourceLabelId, {
+        "type": "geojson",
+        "data": geojson
+      });
+
+      this.mapInstance.addLayer({
+        "id": layerLabelId,
+        "type": "symbol",
+        "source": sourceLabelId,
+        "layout": {
+          'visibility': 'visible',
+          "text-field": object.name,
+          "text-font": ["Open Sans Regular"],
+          "text-size": 11,
+          "text-transform": "uppercase",
+          "text-letter-spacing": 0.05,
+          "text-offset": [0, 1]
+        },
+        "paint": {
+          "text-color": "#202",
+          "text-halo-color": "#fff",
+          "text-halo-width": 2
+        }
+      });
+
+      this.labelsCreated.push({
+        id: layerLabelId,
+        sourceId: sourceLabelId,
+        mapInstance: this.mapInstance
+      });
+    }
+
   };
 
   PolygonsManager.prototype.removeAllPolygonsCreated = function () {
@@ -110,7 +175,18 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
       }
     });
 
+    this.labelsCreated.map(function (eachLabel) {
+      if (eachLabel.mapInstance.getSource(eachLabel.sourceId)) {
+        eachLabel.mapInstance.removeSource(eachLabel.sourceId);
+      }
+
+      if (eachLabel.mapInstance.getLayer(eachLabel.id)) {
+        eachLabel.mapInstance.removeLayer(eachLabel.id);
+      }
+    });
+
     this.polygonsCreated = [];
+    this.labelsCreated = [];
   };
 
   return PolygonsManager;
