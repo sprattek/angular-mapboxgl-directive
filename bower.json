@@ -1,6 +1,6 @@
 {
   "name": "angular-mapboxgl-directive",
-  "version": "0.40.15",
+  "version": "0.40.16",
   "homepage": "https://naimikan.github.io/angular-mapboxgl-directive/",
   "authors": [
     "https://github.com/Naimikan/angular-mapboxgl-directive/graphs/contributors"
@@ -20,7 +20,7 @@
     "dist/turf.min.js",
     "dist/mapbox-gl-geocoder.js",
     "dist/mapbox-gl-geocoder.css",
-    "dist/mapbox-gl-circle.min.js",
+    "dist/mapbox-gl-circle-164.min.js",
     "dist/angular-mapboxgl-directive.min.js"
   ],
   "repository": {
