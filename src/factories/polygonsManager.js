@@ -2,6 +2,7 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
   function PolygonsManager (mapInstance) {
     this.polygonsCreated = [];
     this.labelsCreated = [];
+    this.drawsCreated = [];
     this.mapInstance = mapInstance;
   }
 
@@ -114,6 +115,11 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
           }
         }
       });
+
+      this.drawsCreated.push({
+        id: id,
+        drawInstance: mapboxglDrawInstance
+      });
     }
 
     var sourceLabelId = elementId + '-label-source';
@@ -185,8 +191,13 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
       }
     });
 
+    this.drawsCreatedCreated.map(function (eachDraw) {
+      eachDraw.drawInstance.delete(eachDraw.id);
+    });
+
     this.polygonsCreated = [];
     this.labelsCreated = [];
+    this.drawsCreated = [];
   };
 
   return PolygonsManager;
