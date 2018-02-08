@@ -99,7 +99,7 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
             return [coordinate[1], coordinate[0]];
           });
 
-          var sourceId = drawing.properties.object.id + '-label-source';
+          var sourceId = 'polygon-'+ drawing.properties.object.id + '-label-source';
           var geojson = {
             "type": "FeatureCollection",
             "features": [{
@@ -122,8 +122,8 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
       });
     }
 
-    var sourceLabelId = elementId + '-label-source';
-    var layerLabelId = elementId + '-label-layer';
+    var sourceLabelId = id + '-label-source';
+    var layerLabelId = id + '-label-layer';
     var geojson = {
       "type": "FeatureCollection",
       "features": [{

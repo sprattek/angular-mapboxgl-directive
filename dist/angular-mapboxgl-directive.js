@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.18 2018-02-08
+*  angular-mapboxgl-directive 0.40.19 2018-02-08
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -902,8 +902,6 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       sourceId: sourceId,
       mapInstance: this.mapInstance
     });
-
-    console.log(this.floorplansCreated);
 
     if (object.editable) {
       var feature = {
@@ -2007,7 +2005,7 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
             return [coordinate[1], coordinate[0]];
           });
 
-          var sourceId = drawing.properties.object.id + '-label-source';
+          var sourceId = 'polygon-'+ drawing.properties.object.id + '-label-source';
           var geojson = {
             "type": "FeatureCollection",
             "features": [{
@@ -2030,8 +2028,8 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
       });
     }
 
-    var sourceLabelId = elementId + '-label-source';
-    var layerLabelId = elementId + '-label-layer';
+    var sourceLabelId = id + '-label-source';
+    var layerLabelId = id + '-label-layer';
     var geojson = {
       "type": "FeatureCollection",
       "features": [{
@@ -2606,10 +2604,10 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.18',
+	full: '0.40.19',
 	major: 0,
 	minor: 40,
-	patch: 18
+	patch: 19
 });
 
 angular.module('mapboxgl-directive').constant('mapboxglConstants', {

@@ -10,9 +10,6 @@
       <change beforePath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.js" afterPath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.js" />
       <change beforePath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.min.js" afterPath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.min.js" />
       <change beforePath="$PROJECT_DIR$/src/constants/mapboxglConstants.js" afterPath="$PROJECT_DIR$/src/constants/mapboxglConstants.js" />
-      <change beforePath="$PROJECT_DIR$/src/directives/glFloorplans.js" afterPath="$PROJECT_DIR$/src/directives/glFloorplans.js" />
-      <change beforePath="$PROJECT_DIR$/src/directives/glLayerControls.js" afterPath="$PROJECT_DIR$/src/directives/glLayerControls.js" />
-      <change beforePath="$PROJECT_DIR$/src/factories/floorplansManager.js" afterPath="$PROJECT_DIR$/src/factories/floorplansManager.js" />
       <change beforePath="$PROJECT_DIR$/src/factories/polygonsManager.js" afterPath="$PROJECT_DIR$/src/factories/polygonsManager.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -27,41 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="284">
-      <file leaf-file-name="glLayerControls.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/directives/glLayerControls.js">
+      <file leaf-file-name="circlesManager.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/factories/circlesManager.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="369">
-              <caret line="76" column="0" lean-forward="true" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="glPolygons.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/directives/glPolygons.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1116">
-              <caret line="36" column="7" lean-forward="true" selection-start-line="24" selection-start-column="4" selection-end-line="36" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="glFloorplans.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/directives/glFloorplans.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1116">
-              <caret line="36" column="7" lean-forward="false" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="floorplansManager.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/factories/floorplansManager.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="158">
-              <caret line="55" column="7" lean-forward="false" selection-start-line="55" selection-start-column="7" selection-end-line="55" selection-end-column="7" />
+            <state relative-caret-position="1767">
+              <caret line="75" column="9" lean-forward="true" selection-start-line="72" selection-start-column="6" selection-end-line="75" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -70,18 +37,8 @@
       <file leaf-file-name="polygonsManager.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/factories/polygonsManager.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="8" column="90" lean-forward="false" selection-start-line="8" selection-start-column="70" selection-end-line="8" selection-end-column="90" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mapboxglConstants.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/constants/mapboxglConstants.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="124">
-              <caret line="4" column="11" lean-forward="false" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
+            <state relative-caret-position="713">
+              <caret line="122" column="5" lean-forward="true" selection-start-line="122" selection-start-column="5" selection-end-line="122" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -107,6 +64,16 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="mapboxglConstants.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/constants/mapboxglConstants.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="124">
+              <caret line="4" column="11" lean-forward="false" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -119,7 +86,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>circle</find>
       <find>layerCo</find>
       <find>marker</find>
       <find>Circle</find>
@@ -149,6 +115,7 @@
       <find>drawsCre</find>
       <find>mapboxglDrawInstance</find>
       <find>drawInstance</find>
+      <find>source</find>
     </findStrings>
     <replaceStrings>
       <replace>polygon</replace>
@@ -196,13 +163,13 @@
         <option value="$PROJECT_DIR$/public/app.js" />
         <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/src/factories/circlesManager.js" />
-        <option value="$PROJECT_DIR$/src/factories/polygonsManager.js" />
-        <option value="$PROJECT_DIR$/src/constants/mapboxglConstants.js" />
-        <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/bower.json" />
         <option value="$PROJECT_DIR$/src/directives/glFloorplans.js" />
         <option value="$PROJECT_DIR$/src/directives/glLayerControls.js" />
         <option value="$PROJECT_DIR$/src/factories/floorplansManager.js" />
+        <option value="$PROJECT_DIR$/src/factories/polygonsManager.js" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/bower.json" />
+        <option value="$PROJECT_DIR$/src/constants/mapboxglConstants.js" />
       </list>
     </option>
   </component>
@@ -263,6 +230,12 @@
               <item name="angular-mapboxgl-directive" type="b2602c69:ProjectViewProjectNode" />
               <item name="angular-mapboxgl-directive" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="angular-mapboxgl-directive" type="b2602c69:ProjectViewProjectNode" />
+              <item name="angular-mapboxgl-directive" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="constants" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="angular-mapboxgl-directive" type="b2602c69:ProjectViewProjectNode" />
@@ -403,12 +376,13 @@
       <workItem from="1517325656038" duration="5750000" />
       <workItem from="1517391040677" duration="225000" />
       <workItem from="1518011065870" duration="6528000" />
-      <workItem from="1518080500576" duration="3758000" />
+      <workItem from="1518080500576" duration="4355000" />
+      <workItem from="1518089872771" duration="425000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="182185000" />
+    <option name="totallyTimeSpent" value="183207000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="3862" height="2122" extended-state="0" />
@@ -725,15 +699,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="8" column="5" lean-forward="false" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/factories/circlesManager.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="989">
-          <caret line="110" column="2" lean-forward="false" selection-start-line="110" selection-start-column="2" selection-end-line="110" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -741,14 +706,53 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1271">
           <caret line="41" column="11" lean-forward="false" selection-start-line="41" selection-start-column="11" selection-end-line="41" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/directives/glFloorplans.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="36" column="7" lean-forward="false" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/constants/mapboxglConstants.js">
+    <entry file="file://$PROJECT_DIR$/src/directives/glLayerControls.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="124">
-          <caret line="4" column="11" lean-forward="false" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
+        <state relative-caret-position="2356">
+          <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/directives/glPolygons.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1116">
+          <caret line="36" column="7" lean-forward="false" selection-start-line="24" selection-start-column="4" selection-end-line="36" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/factories/floorplansManager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="55" column="7" lean-forward="false" selection-start-line="55" selection-start-column="7" selection-end-line="55" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/factories/circlesManager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1767">
+          <caret line="75" column="9" lean-forward="true" selection-start-line="72" selection-start-column="6" selection-end-line="75" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/factories/polygonsManager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="713">
+          <caret line="122" column="5" lean-forward="true" selection-start-line="122" selection-start-column="5" selection-end-line="122" selection-end-column="5" />
           <folding />
         </state>
       </provider>
@@ -769,42 +773,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/directives/glPolygons.js">
+    <entry file="file://$PROJECT_DIR$/src/constants/mapboxglConstants.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1116">
-          <caret line="36" column="7" lean-forward="true" selection-start-line="24" selection-start-column="4" selection-end-line="36" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/directives/glFloorplans.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1116">
-          <caret line="36" column="7" lean-forward="false" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/directives/glLayerControls.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="76" column="0" lean-forward="true" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/factories/polygonsManager.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="8" column="90" lean-forward="false" selection-start-line="8" selection-start-column="70" selection-end-line="8" selection-end-column="90" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/factories/floorplansManager.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="55" column="7" lean-forward="false" selection-start-line="55" selection-start-column="7" selection-end-line="55" selection-end-column="7" />
+        <state relative-caret-position="124">
+          <caret line="4" column="11" lean-forward="false" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
           <folding />
         </state>
       </provider>
