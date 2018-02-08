@@ -191,7 +191,7 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
       }
     });
 
-    this.drawsCreatedCreated.map(function (eachDraw) {
+    this.drawsCreated.map(function (eachDraw) {
       eachDraw.drawInstance.delete(eachDraw.id);
     });
 

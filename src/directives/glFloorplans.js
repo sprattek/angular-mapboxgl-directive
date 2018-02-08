@@ -23,16 +23,17 @@ angular.module('mapboxgl-directive').directive('glFloorplans', ['FloorplansManag
     };
 
     controller.getMap().then(function (map) {
+      scope.floorplanManager = new FloorplansManager(map);
+
       scope.$on('mapboxglMap:controlsRendered', function (event, controlsRendered) {
         if (controlsRendered.draw) {
           var mapboxglDrawInstance = controlsRendered.draw.control;
-          scope.floorplanManager = new FloorplansManager(map, mapboxglDrawInstance);
+
+          mapboxglScope.$watchCollection('glFloorplans', function (floorplans) {
+            floorplansWatched(floorplans, mapboxglDrawInstance);
+          });
         }
       });
-
-      scope.$watch('glFloorplans', function (floorplans) {
-        floorplansWatched(floorplans);
-      }, true);
     });
 
     scope.$on('$destroy', function () {

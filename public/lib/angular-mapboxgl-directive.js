@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.17 2018-01-30
+*  angular-mapboxgl-directive 0.40.18 2018-02-08
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -847,14 +847,13 @@ angular.module('mapboxgl-directive').factory('DraggablePointsManager', ['Utils',
 }]);
 
 angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'mapboxglConstants', '$rootScope', '$compile', function (Utils, mapboxglConstants, $rootScope, $compile) {
-  function FloorplansManager (mapInstance, drawInstance) {
+  function FloorplansManager (mapInstance) {
     this.floorplansCreated = [];
     this.popupsCreated = [];
     this.mapInstance = mapInstance;
-    this.drawInstance = drawInstance;
   }
 
-  FloorplansManager.prototype.createFloorplanByObject = function (object) {
+  FloorplansManager.prototype.createFloorplanByObject = function (object, drawInstance) {
     Utils.checkObjects([
       {
         name: 'Map',
@@ -904,6 +903,8 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       mapInstance: this.mapInstance
     });
 
+    console.log(this.floorplansCreated);
+
     if (object.editable) {
       var feature = {
         id: id,
@@ -931,8 +932,8 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
       var self = this;
       this.mapInstance.on('render', function(data) {
         if(data.target.loaded() && !drawAdded) {
-          var featureIds = self.drawInstance.add(feature);
-          self.drawInstance.changeMode('direct_select', {
+          var featureIds = drawInstance.add(feature);
+          drawInstance.changeMode('direct_select', {
             featureId: featureIds[0]
           });
           drawAdded = true;
@@ -2098,7 +2099,7 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
       }
     });
 
-    this.drawsCreatedCreated.map(function (eachDraw) {
+    this.drawsCreated.map(function (eachDraw) {
       eachDraw.drawInstance.delete(eachDraw.id);
     });
 
@@ -2605,10 +2606,10 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.16',
+	full: '0.40.18',
 	major: 0,
 	minor: 40,
-	patch: 17
+	patch: 18
 });
 
 angular.module('mapboxgl-directive').constant('mapboxglConstants', {
@@ -3180,16 +3181,17 @@ angular.module('mapboxgl-directive').directive('glFloorplans', ['FloorplansManag
     };
 
     controller.getMap().then(function (map) {
+      scope.floorplanManager = new FloorplansManager(map);
+
       scope.$on('mapboxglMap:controlsRendered', function (event, controlsRendered) {
         if (controlsRendered.draw) {
           var mapboxglDrawInstance = controlsRendered.draw.control;
-          scope.floorplanManager = new FloorplansManager(map, mapboxglDrawInstance);
+
+          mapboxglScope.$watchCollection('glFloorplans', function (floorplans) {
+            floorplansWatched(floorplans, mapboxglDrawInstance);
+          });
         }
       });
-
-      scope.$watch('glFloorplans', function (floorplans) {
-        floorplansWatched(floorplans);
-      }, true);
     });
 
     scope.$on('$destroy', function () {
@@ -3403,7 +3405,7 @@ angular.module('mapboxgl-directive').directive('glInteractive', [function () {
   return directive;
 }]);
 
-angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
+angular.module('mapboxgl-directive').directive('glLayerControls', ['$timeout', function($timeout) {
   function mapboxGlLayerControlDirectiveLink (scope, element, attrs, controller) {
     if (!controller) {
       throw new Error('Invalid angular-mapboxgl-directive controller');
@@ -3418,6 +3420,7 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
 
     scope.$watchCollection('glLayerControls', function(controls){
       if (controls && controls.length > 0) {
+
         controller.getMap().then(function (map) {
           angular.forEach(controls, function(control){
 
@@ -3432,11 +3435,11 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
             link.className = control.visible ? 'active' : '';
             link.textContent = control.name;
             link.id = control.type;
-            layersCopy[control.type] = scope[control.type];
+            layersCopy[control.type] = scope.$parent.$parent[control.type] ? scope.$parent.$parent[control.type] : scope[control.type];
 
             if (!control.visible) {
               setTimeout(function(){
-                scope[control.type] = scope[control.type].map(function(item){
+                scope[control.type] = layersCopy[control.type].map(function(item){
                   if ((item.options && item.options.editable) || item.editable) {
                     return item;
                   } else {
@@ -3455,7 +3458,7 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
 
               if (this.className === 'active') {
                 this.className = '';
-                scope[this.id] = scope[this.id].map(function(item){
+                scope[this.id] = layersCopy[this.id].map(function(item){
                   if ((item.options && item.options.editable) || item.editable) {
                     return item;
                   } else {
@@ -3480,10 +3483,10 @@ angular.module('mapboxgl-directive').directive('glLayerControls', [function () {
     });
 
     scope.$watchCollection('glCircles', function(circles){
-      var geofences = circles.concat(scope.glPolygons);
+      var geofences = circles ? circles.concat(scope.glPolygons) : false;
       if (geofences && geofences.length > 0) {
         controller.getMap().then(function (map) {
-          var haveName = geofences.filter(function (obj) { return obj.name; }).length > 0 ? true : false;
+          var haveName = geofences.filter(function (obj) { return obj.name; }).length > 0;
 
           if (document.getElementById('geofence-labels')) {
             document.getElementById('geofence-labels').remove();
