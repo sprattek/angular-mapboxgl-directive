@@ -43,6 +43,13 @@ angular.module('mapboxgl-directive').factory('MarkersManager', ['Utils', 'mapbox
 
     marker.addTo(this.mapInstance);
 
+    function onDragEnd() {
+      var lngLat = marker.getLngLat();
+      object.coordinates = [lngLat.lat, lngLat.lng];
+    }
+
+    marker.on('dragend', onDragEnd);
+
     this.markersCreated.push({
       markerId: elementId,
       markerInstance: marker

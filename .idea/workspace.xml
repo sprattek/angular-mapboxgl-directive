@@ -3,17 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="84d557dc-3fb0-4358-8b74-6ce83d6d9ed4" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.jshintrc" beforeDir="false" afterPath="$PROJECT_DIR$/.jshintrc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bower.json" beforeDir="false" afterPath="$PROJECT_DIR$/bower.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/angular-mapboxgl-directive.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/angular-mapboxgl-directive.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/angular-mapboxgl-directive.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/angular-mapboxgl-directive.min.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/img/floorplan.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/public/img/floorplan.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/lib/angular-mapboxgl-directive.min.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/constants/mapboxglConstants.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/mapboxglConstants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/factories/markersManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/factories/markersManager.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -48,8 +45,8 @@
       <file leaf-file-name="mapboxglConstants.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/constants/mapboxglConstants.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="21">
-              <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+            <state relative-caret-position="84">
+              <caret line="4" column="11" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
             </state>
           </provider>
         </entry>
@@ -126,7 +123,6 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/grunt/aliases.json" />
         <option value="$PROJECT_DIR$/src/directives/glCenter.js" />
-        <option value="$PROJECT_DIR$/src/factories/markersManager.js" />
         <option value="$PROJECT_DIR$/src/less/mapboxglLess.less" />
         <option value="$PROJECT_DIR$/src/directives/glMarkers.js" />
         <option value="$PROJECT_DIR$/src/directives/glDraggablePoints.js" />
@@ -151,6 +147,7 @@
         <option value="$PROJECT_DIR$/src/factories/floorplansManager.js" />
         <option value="$PROJECT_DIR$/public/app.js" />
         <option value="$PROJECT_DIR$/public/index.html" />
+        <option value="$PROJECT_DIR$/src/factories/markersManager.js" />
         <option value="$PROJECT_DIR$/bower.json" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/constants/mapboxglConstants.js" />
@@ -199,6 +196,12 @@
               <item name="angular-mapboxgl-directive" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="constants" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="angular-mapboxgl-directive" type="b2602c69:ProjectViewProjectNode" />
+              <item name="angular-mapboxgl-directive" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="factories" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -336,12 +339,12 @@
       <workItem from="1528298414906" duration="704000" />
       <workItem from="1528359256124" duration="4343000" />
       <workItem from="1530709251365" duration="2964000" />
-      <workItem from="1530857646772" duration="1601000" />
+      <workItem from="1530857646772" duration="2496000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="200844000" />
+    <option name="totallyTimeSpent" value="201739000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="2575" height="1415" extended-state="6" />
@@ -601,13 +604,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/vendor/mapbox-gl-draw-rectangle-mode.js" />
     <entry file="file://$PROJECT_DIR$/public/lib/mapbox-gl-draw-rectangle-mode.js" />
-    <entry file="file://$PROJECT_DIR$/src/factories/floorplansManager.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2121">
-          <caret line="101" column="6" selection-start-line="101" selection-start-column="6" selection-end-line="101" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/grunt/aliases.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
@@ -633,13 +629,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="399">
           <caret line="19" column="57" selection-start-line="19" selection-start-column="57" selection-end-line="19" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/factories/markersManager.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="12" column="7" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -690,6 +679,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/factories/markersManager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1086">
+          <caret line="61" column="7" lean-forward="true" selection-start-line="61" selection-start-column="7" selection-end-line="61" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/factories/floorplansManager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="101" column="6" selection-start-line="101" selection-start-column="6" selection-end-line="101" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/bower.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="42">
@@ -706,8 +709,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/constants/mapboxglConstants.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21">
-          <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+        <state relative-caret-position="84">
+          <caret line="4" column="11" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
         </state>
       </provider>
     </entry>
