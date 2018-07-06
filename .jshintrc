@@ -19,6 +19,7 @@
     "angular": false,
     "mapboxgl": false,
     "MapboxCircle": false,
-    "MapboxDraw": false
+    "MapboxDraw": false,
+    "DrawRectangle": false
   }
 }

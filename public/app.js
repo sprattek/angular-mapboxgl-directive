@@ -131,14 +131,7 @@
         name: 'Polygon'
       }];
 
-      $scope.glFloorplans = [{
-        url: 'img/floorplan.jpg',
-        coordinates: [[38.90, -77.02], [38.91, -77.02], [38.90, -77.01], [38.91, -77.01]],
-        id: 'floorplan01',
-        name: 'Floor 1',
-        editable: false,
-        visible: false
-      }];
+      $scope.glFloorplans = [];
 
       setTimeout(function(){
         $scope.glFloorplans.push({
