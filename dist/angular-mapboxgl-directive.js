@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.22 2018-07-06
+*  angular-mapboxgl-directive 0.40.23 2018-07-18
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -676,12 +676,11 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
     });
 
     this.labelsCreated.map(function (eachLabel) {
-      if (eachLabel.mapInstance.getSource(eachLabel.sourceId)) {
-        eachLabel.mapInstance.removeSource(eachLabel.sourceId);
-      }
-
       if (eachLabel.mapInstance.getLayer(eachLabel.id)) {
         eachLabel.mapInstance.removeLayer(eachLabel.id);
+      }
+      if (eachLabel.mapInstance.getSource(eachLabel.sourceId)) {
+        eachLabel.mapInstance.removeSource(eachLabel.sourceId);
       }
     });
 
@@ -831,12 +830,11 @@ angular.module('mapboxgl-directive').factory('DraggablePointsManager', ['Utils',
 
   DraggablePointsManager.prototype.removeAllDraggablePointsCreated = function () {
     this.draggablePointsCreated.map(function (eachDraggablePoint) {
-      if (eachDraggablePoint.mapInstance.getSource(eachDraggablePoint.sourceId)) {
-        eachDraggablePoint.mapInstance.removeSource(eachDraggablePoint.sourceId);
-      }
-
       if (eachDraggablePoint.mapInstance.getLayer(eachDraggablePoint.id)) {
         eachDraggablePoint.mapInstance.removeLayer(eachDraggablePoint.id);
+      }
+      if (eachDraggablePoint.mapInstance.getSource(eachDraggablePoint.sourceId)) {
+        eachDraggablePoint.mapInstance.removeSource(eachDraggablePoint.sourceId);
       }
     });
 
@@ -1005,12 +1003,11 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
 
   FloorplansManager.prototype.removeAllFloorplansCreated = function () {
     this.floorplansCreated.map(function (eachFloorplan) {
-      if (eachFloorplan.mapInstance.getSource(eachFloorplan.sourceId)) {
-        eachFloorplan.mapInstance.removeSource(eachFloorplan.sourceId);
-      }
-
       if (eachFloorplan.mapInstance.getLayer(eachFloorplan.id)) {
         eachFloorplan.mapInstance.removeLayer(eachFloorplan.id);
+      }
+      if (eachFloorplan.mapInstance.getSource(eachFloorplan.sourceId)) {
+        eachFloorplan.mapInstance.removeSource(eachFloorplan.sourceId);
       }
     });
 
@@ -1717,7 +1714,7 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
             return [coordinate[1], coordinate[0]];
           });
 
-          var sourceId = 'polygon-'+ drawing.properties.object.id + '-label-source';
+          var sourceId = drawing.properties.object.id + '-label-source';
           var geojson = {
             "type": "FeatureCollection",
             "features": [{
@@ -1740,8 +1737,8 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
       });
     }
 
-    var sourceLabelId = id + '-label-source';
-    var layerLabelId = id + '-label-layer';
+    var sourceLabelId = elementId + '-label-source';
+    var layerLabelId = elementId + '-label-layer';
     var geojson = {
       "type": "FeatureCollection",
       "features": [{
@@ -1790,22 +1787,20 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
 
   PolygonsManager.prototype.removeAllPolygonsCreated = function () {
     this.polygonsCreated.map(function (eachPolygon) {
-      if (eachPolygon.mapInstance.getSource(eachPolygon.sourceId)) {
-        eachPolygon.mapInstance.removeSource(eachPolygon.sourceId);
-      }
-
       if (eachPolygon.mapInstance.getLayer(eachPolygon.id)) {
         eachPolygon.mapInstance.removeLayer(eachPolygon.id);
+      }
+      if (eachPolygon.mapInstance.getSource(eachPolygon.sourceId)) {
+        eachPolygon.mapInstance.removeSource(eachPolygon.sourceId);
       }
     });
 
     this.labelsCreated.map(function (eachLabel) {
-      if (eachLabel.mapInstance.getSource(eachLabel.sourceId)) {
-        eachLabel.mapInstance.removeSource(eachLabel.sourceId);
-      }
-
       if (eachLabel.mapInstance.getLayer(eachLabel.id)) {
         eachLabel.mapInstance.removeLayer(eachLabel.id);
+      }
+      if (eachLabel.mapInstance.getSource(eachLabel.sourceId)) {
+        eachLabel.mapInstance.removeSource(eachLabel.sourceId);
       }
     });
 
@@ -2316,10 +2311,10 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.22',
+	full: '0.40.23',
 	major: 0,
 	minor: 40,
-	patch: 22
+	patch: 23
 });
 
 angular.module('mapboxgl-directive').constant('mapboxglConstants', {
@@ -3145,7 +3140,7 @@ angular.module('mapboxgl-directive').directive('glLayerControls', ['$timeout', f
             link.className = control.visible ? 'active' : '';
             link.textContent = control.name;
             link.id = control.type;
-            layersCopy[control.type] = scope.$parent.$parent[control.type] ? scope.$parent.$parent[control.type] : scope[control.type];
+            layersCopy[control.type] = scope.$parent.$parent && scope.$parent.$parent[control.type] ? scope.$parent.$parent[control.type] : scope[control.type];
 
             if (!control.visible) {
               setTimeout(function(){

@@ -137,12 +137,11 @@ angular.module('mapboxgl-directive').factory('DraggablePointsManager', ['Utils',
 
   DraggablePointsManager.prototype.removeAllDraggablePointsCreated = function () {
     this.draggablePointsCreated.map(function (eachDraggablePoint) {
-      if (eachDraggablePoint.mapInstance.getSource(eachDraggablePoint.sourceId)) {
-        eachDraggablePoint.mapInstance.removeSource(eachDraggablePoint.sourceId);
-      }
-
       if (eachDraggablePoint.mapInstance.getLayer(eachDraggablePoint.id)) {
         eachDraggablePoint.mapInstance.removeLayer(eachDraggablePoint.id);
+      }
+      if (eachDraggablePoint.mapInstance.getSource(eachDraggablePoint.sourceId)) {
+        eachDraggablePoint.mapInstance.removeSource(eachDraggablePoint.sourceId);
       }
     });
 

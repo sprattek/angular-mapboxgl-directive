@@ -28,7 +28,7 @@ angular.module('mapboxgl-directive').directive('glLayerControls', ['$timeout', f
             link.className = control.visible ? 'active' : '';
             link.textContent = control.name;
             link.id = control.type;
-            layersCopy[control.type] = scope.$parent.$parent[control.type] ? scope.$parent.$parent[control.type] : scope[control.type];
+            layersCopy[control.type] = scope.$parent.$parent && scope.$parent.$parent[control.type] ? scope.$parent.$parent[control.type] : scope[control.type];
 
             if (!control.visible) {
               setTimeout(function(){

@@ -114,12 +114,11 @@ angular.module('mapboxgl-directive').factory('CirclesManager', ['Utils', 'mapbox
     });
 
     this.labelsCreated.map(function (eachLabel) {
-      if (eachLabel.mapInstance.getSource(eachLabel.sourceId)) {
-        eachLabel.mapInstance.removeSource(eachLabel.sourceId);
-      }
-
       if (eachLabel.mapInstance.getLayer(eachLabel.id)) {
         eachLabel.mapInstance.removeLayer(eachLabel.id);
+      }
+      if (eachLabel.mapInstance.getSource(eachLabel.sourceId)) {
+        eachLabel.mapInstance.removeSource(eachLabel.sourceId);
       }
     });
 

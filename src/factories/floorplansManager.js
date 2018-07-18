@@ -157,12 +157,11 @@ angular.module('mapboxgl-directive').factory('FloorplansManager', ['Utils', 'map
 
   FloorplansManager.prototype.removeAllFloorplansCreated = function () {
     this.floorplansCreated.map(function (eachFloorplan) {
-      if (eachFloorplan.mapInstance.getSource(eachFloorplan.sourceId)) {
-        eachFloorplan.mapInstance.removeSource(eachFloorplan.sourceId);
-      }
-
       if (eachFloorplan.mapInstance.getLayer(eachFloorplan.id)) {
         eachFloorplan.mapInstance.removeLayer(eachFloorplan.id);
+      }
+      if (eachFloorplan.mapInstance.getSource(eachFloorplan.sourceId)) {
+        eachFloorplan.mapInstance.removeSource(eachFloorplan.sourceId);
       }
     });
 

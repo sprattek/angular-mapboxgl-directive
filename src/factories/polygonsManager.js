@@ -99,7 +99,7 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
             return [coordinate[1], coordinate[0]];
           });
 
-          var sourceId = 'polygon-'+ drawing.properties.object.id + '-label-source';
+          var sourceId = drawing.properties.object.id + '-label-source';
           var geojson = {
             "type": "FeatureCollection",
             "features": [{
@@ -122,8 +122,8 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
       });
     }
 
-    var sourceLabelId = id + '-label-source';
-    var layerLabelId = id + '-label-layer';
+    var sourceLabelId = elementId + '-label-source';
+    var layerLabelId = elementId + '-label-layer';
     var geojson = {
       "type": "FeatureCollection",
       "features": [{
@@ -172,22 +172,20 @@ angular.module('mapboxgl-directive').factory('PolygonsManager', ['Utils', 'mapbo
 
   PolygonsManager.prototype.removeAllPolygonsCreated = function () {
     this.polygonsCreated.map(function (eachPolygon) {
-      if (eachPolygon.mapInstance.getSource(eachPolygon.sourceId)) {
-        eachPolygon.mapInstance.removeSource(eachPolygon.sourceId);
-      }
-
       if (eachPolygon.mapInstance.getLayer(eachPolygon.id)) {
         eachPolygon.mapInstance.removeLayer(eachPolygon.id);
+      }
+      if (eachPolygon.mapInstance.getSource(eachPolygon.sourceId)) {
+        eachPolygon.mapInstance.removeSource(eachPolygon.sourceId);
       }
     });
 
     this.labelsCreated.map(function (eachLabel) {
-      if (eachLabel.mapInstance.getSource(eachLabel.sourceId)) {
-        eachLabel.mapInstance.removeSource(eachLabel.sourceId);
-      }
-
       if (eachLabel.mapInstance.getLayer(eachLabel.id)) {
         eachLabel.mapInstance.removeLayer(eachLabel.id);
+      }
+      if (eachLabel.mapInstance.getSource(eachLabel.sourceId)) {
+        eachLabel.mapInstance.removeSource(eachLabel.sourceId);
       }
     });
 
