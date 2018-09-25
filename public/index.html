@@ -17,6 +17,7 @@
     <script src='lib/mapbox-gl-draw.js'></script>
 
     <script src='lib/turf.min.js'></script>
+    <script src='lib/sphericalmercator.js'></script>
 
     <script src='lib/mapbox-gl-geocoder.js'></script>
     <link rel='stylesheet' href='lib/mapbox-gl-geocoder.css' type='text/css' />
@@ -30,16 +31,31 @@
 
       <mapboxgl
         access-token="no-token"
-        gl-center="[38.901, -77.06]"
-        gl-min-zoom="1"
+        gl-center="[48.6069, 17.833036780358697]"
+        gl-min-zoom="15"
         gl-max-zoom="18"
-        gl-floorplans="glFloorplans"
+        gl-floorplan-editor="glFloorplanEditor"
         gl-circles="glCircles"
         gl-polygons="glPolygons"
         gl-style="glStyle"
         gl-controls="glControls"
         gl-layer-controls="glLayerControls">
       </mapboxgl>
+
+  <form>
+    <label>Latitude: </label>
+    <input type="number" ng-model="glFloorplanEditor[0].center.lat" step=".0001">
+    <label>Longitude: </label>
+    <input type="number" ng-model="glFloorplanEditor[0].center.lng" step=".0001">
+    <label>Scale: </label>
+    <input type="number" ng-model="glFloorplanEditor[0].scale">
+    <label>Rotate: </label>
+    <input type="number" ng-model="glFloorplanEditor[0].angle">
+    <label>Opacity: </label>
+    <input type="number" ng-model="glFloorplanEditor[0].opacity">
+  </form>
+
+    <pre>{{glFloorplanEditor | json}}</pre>
 
   </body>
 </html>

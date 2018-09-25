@@ -2,7 +2,7 @@
 	"dist": {
     "expand": true,
     "cwd": "vendor",
-    "src": "*",
+    "src": "**",
     "dest": "dist"
 	},
   "public": {
