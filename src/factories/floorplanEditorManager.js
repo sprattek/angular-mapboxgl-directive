@@ -22,7 +22,7 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
     return { width: srcWidth*ratio, height: srcHeight*ratio, ratio: ratio };
   }
 
-  FloorplanEditorManager.prototype.createFloorplanByObject = function (object, drawInstance) {
+  FloorplanEditorManager.prototype.createFloorplanByObject = function (object, scope) {
     Utils.checkObjects([
       {
         name: 'Map',
@@ -30,19 +30,15 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
       }, {
         name: 'Object',
         object: object,
-        attributes: ['coordinates', 'url', 'id', 'scale', 'angle', 'opacity', 'center']
+        attributes: ['coordinates', 'url', 'scale', 'angle', 'opacity', 'center']
       }
     ]);
 
     var self = this;
-    var elementId = object.id;
-    elementId = angular.isDefined(elementId) && elementId !== null ? elementId : Utils.generateGUID();
-    var scope = $rootScope.$new();  // or $new(true) if you want an isolate scope
+    var elementId = 'floorplan-editor';
 
-    object.id = elementId;
-
-    const id = 'floorplan-'+elementId;
-    const sourceId = 'floorplan-source-'+elementId;
+    const id = elementId;
+    const sourceId = elementId + '-source';
 
     const map = this.mapInstance;
 
@@ -70,30 +66,34 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
       const se_corner = turf.destination(sw_corner, image_width_km, -90);
 
       var c,
-          c_scaled,
-          c_rotated,
-          c_org,
-          floorplan_holder,
-          floorplan_holder_scaled,
-          floorplan_holder_rotated,
-          floorplan_holder_org,
-          scale_ratio,
-          angle,
-          opacity,
-          center,
-          dragging = false;
+        c_scaled,
+        c_rotated,
+        c_org,
+        floorplan_holder,
+        floorplan_holder_scaled,
+        floorplan_holder_rotated,
+        floorplan_holder_org,
+        scale_ratio,
+        angle,
+        opacity,
+        center,
+        dragging = false;
       if (object.coordinates) {
         c = object.coordinates;
+        scale_ratio = object.scale ? object.scale/100 : 1;
+        opacity = object.opacity ? object.opacity : 65;
+        angle = object.angle ? object.angle : 0;
         floorplan_holder = turf.polygon([[c[0], c[1], c[2], c[3], c[0]]]);
         floorplan_holder_org = turf.polygon([[ne_corner.geometry.coordinates, nw_corner.geometry.coordinates, sw_corner.geometry.coordinates, se_corner.geometry.coordinates, ne_corner.geometry.coordinates]]);
         floorplan_holder_org = turf.transformScale(floorplan_holder_org, 0.75); // non scaled and non rotated but variable position
         floorplan_holder_scaled = turf.transformScale(floorplan_holder_org, object.scale/100); // keep original angle but variable scale and position
         floorplan_holder_rotated = turf.transformRotate(floorplan_holder_org, object.angle); // keep original scale but variable angle and position
         center = turf.centroid(floorplan_holder).geometry.coordinates;
-        scale_ratio = object.scale/100;
-        opacity = object.opacity ? object.opacity : 65;
       } else {
         c = [ne_corner.geometry.coordinates, nw_corner.geometry.coordinates, sw_corner.geometry.coordinates, se_corner.geometry.coordinates];
+        scale_ratio = 1;
+        opacity = object.opacity ? object.opacity : 65;
+        angle = object.angle ? object.angle : 0;
         floorplan_holder = turf.polygon([[c[0], c[1], c[2], c[3], c[0]]]);
         floorplan_holder = turf.transformScale(floorplan_holder, 0.75);
         floorplan_holder_scaled = angular.copy(floorplan_holder); // keep original angle but variable scale and position
@@ -101,8 +101,6 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         floorplan_holder_org = angular.copy(floorplan_holder); // non scaled and non rotated but variable position
         center = turf.centroid(floorplan_holder).geometry.coordinates;
         c = [floorplan_holder.geometry.coordinates[0][0], floorplan_holder.geometry.coordinates[0][1], floorplan_holder.geometry.coordinates[0][2], floorplan_holder.geometry.coordinates[0][3]];
-        scale_ratio = 1;
-        opacity = object.opacity ? object.opacity : 65;
       }
 
       c_scaled = [
@@ -127,11 +125,11 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
       ];
 
       $timeout(function() {
-        object.scale = scale_ratio*100;
-        object.angle = object.angle ? object.angle : 0;
+        object.scale = object.scale ? object.scale : scale_ratio*100;
+        object.angle = angle;
         object.opacity = opacity;
         object.coordinates = c;
-        object.center = {
+        object.center = object.center ? object.center : {
           lat: center[1],
           lng: center[0]
         };
@@ -150,12 +148,12 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         source: sourceId,
         type: 'raster',
         layout: {
-          'visibility': object.visible ? 'visible' : 'none'
+          'visibility': 'visible'
         },
         paint: {
           "raster-opacity": opacity/100
         }
-      }, 'country_label_1');
+      });
 
       /*map.addSource('my-geojson', {
           "type": "geojson",
@@ -273,7 +271,8 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         };
       }
 
-      scope.$on('center-change', function(args, floorplan) {
+      var register = scope.$on('center-change', function(args, floorplan) {
+        console.log(dragging);
         if (!dragging) {
           console.log('center-change');
           var new_coordinates = move(null, floorplan);
@@ -281,7 +280,7 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         }
       });
 
-      scope.$on('scale-change', function(args, floorplan) {
+      var register2 = scope.$on('scale-change', function(args, floorplan) {
         if (!dragging) {
           console.log('scale-change');
           var new_coordinates = scale(null, null, floorplan);
@@ -289,12 +288,22 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         }
       });
 
-      scope.$on('angle-change', function(args, floorplan) {
+      var register3 = scope.$on('angle-change', function(args, floorplan) {
         if (!dragging) {
           console.log('angle-change');
           var new_coordinates = rotate(null, null, floorplan);
           applyChanges(new_coordinates);
         }
+      });
+      var register4 = scope.$on('opacity-change', function(args, floorplan) {
+        map.setPaintProperty(id, 'raster-opacity', floorplan.opacity/100);
+        opacity = floorplan.opacity;
+      });
+      scope.$on('$destroy', function(){
+        register();
+        register2();
+        register3();
+        register4();
       });
 
       function applyChanges(new_coordinates) {
@@ -333,114 +342,107 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         }
       }
 
-      scope.$on('opacity-change', function(args, floorplan) {
-        map.setPaintProperty(id, 'raster-opacity', floorplan.opacity/100);
-        opacity = floorplan.opacity;
-      });
+      var startPosition;
+      var markers = [{
+        type: 'move-marker',
+        icon: 'move-marker',
+        position: [center[0], center[1]]
+      }, {
+        type: 'rotate-marker-ne',
+        icon: 'rotate-marker',
+        position: floorplan_holder.geometry.coordinates[0][0]
+      }, {
+        type: 'scale-marker-nw',
+        icon: 'scale-marker',
+        position: floorplan_holder.geometry.coordinates[0][1]
+      }, {
+        type: 'rotate-marker-sw',
+        icon: 'rotate-marker',
+        position: floorplan_holder.geometry.coordinates[0][2]
+      }, {
+        type: 'scale-marker-se',
+        icon: 'scale-marker',
+        position: floorplan_holder.geometry.coordinates[0][3]
+      }];
 
-      if (object.editable) {
-        var startPosition;
-        var markers = [{
-          type: 'move-marker',
-          icon: 'move-marker',
-          position: [center[0], center[1]]
-        }, {
-          type: 'rotate-marker-ne',
-          icon: 'rotate-marker',
-          position: floorplan_holder.geometry.coordinates[0][0]
-        }, {
-          type: 'scale-marker-nw',
-          icon: 'scale-marker',
-          position: floorplan_holder.geometry.coordinates[0][1]
-        }, {
-          type: 'rotate-marker-sw',
-          icon: 'rotate-marker',
-          position: floorplan_holder.geometry.coordinates[0][2]
-        }, {
-          type: 'scale-marker-se',
-          icon: 'scale-marker',
-          position: floorplan_holder.geometry.coordinates[0][3]
-        }];
+      angular.forEach(markers, function(marker) {
+        var el = document.createElement('div');
+        el.id = marker.type;
+        el.className = 'marker ' + marker.type;
+        el.style.backgroundImage = 'url(https://proximi.io/wp-content/uploads/2018/09/'+marker.icon+'.png)';//'url(lib/images/'+marker.icon+'.png)';
+        el.style.width = '32px';
+        el.style.height = '32px';
 
-        angular.forEach(markers, function(marker) {
-          var el = document.createElement('div');
-          el.id = marker.type;
-          el.className = 'marker ' + marker.type;
-          el.style.backgroundImage = 'url(https://proximi.io/wp-content/uploads/2018/09/'+marker.icon+'.png)';//'url(lib/images/'+marker.icon+'.png)';
-          el.style.width = '32px';
-          el.style.height = '32px';
+        // add marker to map
+        var m = new mapboxgl.Marker({
+          id: marker.type,
+          draggable: true,
+          element: el
+        })
+          .setLngLat(marker.position)
+          .addTo(map);
 
-          // add marker to map
-          var m = new mapboxgl.Marker({
-            id: marker.type,
-            draggable: true,
-            element: el
-          })
-            .setLngLat(marker.position)
-            .addTo(map);
-
-          m.on('dragstart', function(e) {
-            startPosition = {
-              _lngLat: e.target._lngLat,
-              _pos: e.target._pos
-            };
-            map.setPaintProperty(id, 'raster-opacity', 0.3);
-          });
-
-          var new_coordinates;
-          m.on('drag', function(e) {
-            dragging = true;
-            if (marker.type === 'move-marker') {
-              new_coordinates = move(e);
-            } else if (marker.icon === 'scale-marker') {
-              new_coordinates = scale(e, startPosition);
-            } else if (marker.icon === 'rotate-marker') {
-              new_coordinates = rotate(e, startPosition);
-            }
-            if (new_coordinates.fresh) {
-              floorplanSource.setCoordinates(new_coordinates.fresh);
-              angular.forEach(self.markersCreated, function(marker, key) {
-                if (marker._element.id !== 'move-marker') {
-                  marker.setLngLat(new_coordinates.fresh[key-1]);
-                }
-              });
-            }
-          });
-
-          m.on('dragend', function(e) {
-            dragging = false;
-            if (marker.type === 'move-marker') {
-              center = [e.target._lngLat.lng, e.target._lngLat.lat];
-            }
-            c = new_coordinates.fresh;
-            floorplan_holder = turf.polygon([[c[0], c[1], c[2], c[3], c[0]]]);
-            if (new_coordinates.event === 'move') {
-              c_scaled = new_coordinates.scaled ? new_coordinates.scaled : c_scaled;
-              c_rotated = new_coordinates.rotated ? new_coordinates.rotated : c_rotated;
-              c_org = new_coordinates.original ? new_coordinates.original : c_org;
-              floorplan_holder_scaled = turf.polygon([[c_scaled[0], c_scaled[1], c_scaled[2], c_scaled[3], c_scaled[0]]]);
-              floorplan_holder_rotated = turf.polygon([[c_rotated[0], c_rotated[1], c_rotated[2], c_rotated[3], c_rotated[0]]]);
-              floorplan_holder_org = turf.polygon([[c_org[0], c_org[1], c_org[2], c_org[3], c_org[0]]]);
-            } else if (new_coordinates.event === 'scale') {
-              c_scaled = new_coordinates.scaled ? new_coordinates.scaled : c_scaled;
-              floorplan_holder_scaled = turf.polygon([[c_scaled[0], c_scaled[1], c_scaled[2], c_scaled[3], c_scaled[0]]]);
-            } else if (new_coordinates.event === 'rotate') {
-              c_rotated = new_coordinates.rotated ? new_coordinates.rotated : c_rotated;
-              floorplan_holder_rotated = turf.polygon([[c_rotated[0], c_rotated[1], c_rotated[2], c_rotated[3], c_rotated[0]]]);
-            }
-            //geojsonSource.setData(floorplan_holder_scaled);
-            //geojsonSource2.setData(floorplan_holder_rotated);
-            scale_ratio = object.scale/100;
-            angle = object.angle;
-            $timeout(function() {
-              object.coordinates = c;
-            });
-            map.setPaintProperty(id, 'raster-opacity', opacity/100);
-          });
-
-          self.markersCreated.push(m);
+        m.on('dragstart', function(e) {
+          startPosition = {
+            _lngLat: e.target._lngLat,
+            _pos: e.target._pos
+          };
+          map.setPaintProperty(id, 'raster-opacity', 0.3);
         });
-      }
+
+        var new_coordinates;
+        m.on('drag', function(e) {
+          dragging = true;
+          if (marker.type === 'move-marker') {
+            new_coordinates = move(e);
+          } else if (marker.icon === 'scale-marker') {
+            new_coordinates = scale(e, startPosition);
+          } else if (marker.icon === 'rotate-marker') {
+            new_coordinates = rotate(e, startPosition);
+          }
+          if (new_coordinates.fresh) {
+            floorplanSource.setCoordinates(new_coordinates.fresh);
+            angular.forEach(self.markersCreated, function(marker, key) {
+              if (marker._element.id !== 'move-marker') {
+                marker.setLngLat(new_coordinates.fresh[key-1]);
+              }
+            });
+          }
+        });
+
+        m.on('dragend', function(e) {
+          dragging = false;
+          if (marker.type === 'move-marker') {
+            center = [e.target._lngLat.lng, e.target._lngLat.lat];
+          }
+          c = new_coordinates.fresh;
+          floorplan_holder = turf.polygon([[c[0], c[1], c[2], c[3], c[0]]]);
+          if (new_coordinates.event === 'move') {
+            c_scaled = new_coordinates.scaled ? new_coordinates.scaled : c_scaled;
+            c_rotated = new_coordinates.rotated ? new_coordinates.rotated : c_rotated;
+            c_org = new_coordinates.original ? new_coordinates.original : c_org;
+            floorplan_holder_scaled = turf.polygon([[c_scaled[0], c_scaled[1], c_scaled[2], c_scaled[3], c_scaled[0]]]);
+            floorplan_holder_rotated = turf.polygon([[c_rotated[0], c_rotated[1], c_rotated[2], c_rotated[3], c_rotated[0]]]);
+            floorplan_holder_org = turf.polygon([[c_org[0], c_org[1], c_org[2], c_org[3], c_org[0]]]);
+          } else if (new_coordinates.event === 'scale') {
+            c_scaled = new_coordinates.scaled ? new_coordinates.scaled : c_scaled;
+            floorplan_holder_scaled = turf.polygon([[c_scaled[0], c_scaled[1], c_scaled[2], c_scaled[3], c_scaled[0]]]);
+          } else if (new_coordinates.event === 'rotate') {
+            c_rotated = new_coordinates.rotated ? new_coordinates.rotated : c_rotated;
+            floorplan_holder_rotated = turf.polygon([[c_rotated[0], c_rotated[1], c_rotated[2], c_rotated[3], c_rotated[0]]]);
+          }
+          //geojsonSource.setData(floorplan_holder_scaled);
+          //geojsonSource2.setData(floorplan_holder_rotated);
+          scale_ratio = object.scale/100;
+          angle = object.angle;
+          $timeout(function() {
+            object.coordinates = c;
+          });
+          map.setPaintProperty(id, 'raster-opacity', opacity/100);
+        });
+
+        self.markersCreated.push(m);
+      });
     };
 
   };

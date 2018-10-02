@@ -11,10 +11,10 @@ angular.module('mapboxgl-directive').directive('glFloorplanEditor', ['FloorplanE
         scope.floorplanEditorManager.removeAllFloorplansCreated();
 
         if (Object.prototype.toString.call(floorplans) === Object.prototype.toString.call({})) {
-          scope.floorplanEditorManager.createFloorplanByObject(floorplans, mapboxglDrawInstance);
+          scope.floorplanEditorManager.createFloorplanByObject(floorplans, scope);
         } else if (Object.prototype.toString.call(floorplans) === Object.prototype.toString.call([])) {
           floorplans.map(function (eachFloorplan) {
-            scope.floorplanEditorManager.createFloorplanByObject(eachFloorplan, mapboxglDrawInstance);
+            scope.floorplanEditorManager.createFloorplanByObject(eachFloorplan, scope);
           });
         } else {
           throw new Error('Invalid floorplan parameter');
@@ -30,20 +30,20 @@ angular.module('mapboxgl-directive').directive('glFloorplanEditor', ['FloorplanE
           var mapboxglDrawInstance = controlsRendered.draw.control;
 
           mapboxglScope.$watchCollection('glFloorplanEditor', function (floorplans) {
-            floorplansWatched(floorplans, mapboxglDrawInstance);
+            if (floorplans.length > 0) floorplansWatched(floorplans, mapboxglDrawInstance);
           });
           mapboxglScope.$watch('glFloorplanEditor', function (newVal, oldVal) {
-            if (newVal[0].scale !== oldVal[0].scale) {
-              $rootScope.$broadcast('scale-change', newVal[0]);
+            if ((newVal[0] && oldVal[0]) && (newVal[0].scale && oldVal[0].scale) && newVal[0].scale !== oldVal[0].scale) {
+              scope.$broadcast('scale-change', newVal[0]);
             }
-            if (newVal[0].angle !== oldVal[0].angle) {
-              $rootScope.$broadcast('angle-change', newVal[0]);
+            if ((newVal[0] && oldVal[0]) && (newVal[0].angle && oldVal[0].angle) &&  newVal[0].angle !== oldVal[0].angle) {
+              scope.$broadcast('angle-change', newVal[0]);
             }
-            if (newVal[0].opacity !== oldVal[0].opacity) {
-              $rootScope.$broadcast('opacity-change', newVal[0]);
+            if ((newVal[0] && oldVal[0]) && (newVal[0].opacity && oldVal[0].opacity) &&  newVal[0].opacity !== oldVal[0].opacity) {
+              scope.$broadcast('opacity-change', newVal[0]);
             }
-            if ((newVal[0].center && oldVal[0].center) && (newVal[0].center.lat !== oldVal[0].center.lat || newVal[0].center.lng !== oldVal[0].center.lng)) {
-              $rootScope.$broadcast('center-change', newVal[0]);
+            if ((newVal[0] && oldVal[0]) && (newVal[0].center && oldVal[0].center) && (newVal[0].center.lat !== oldVal[0].center.lat || newVal[0].center.lng !== oldVal[0].center.lng)) {
+              scope.$broadcast('center-change', newVal[0]);
             }
           }, true);
         }
