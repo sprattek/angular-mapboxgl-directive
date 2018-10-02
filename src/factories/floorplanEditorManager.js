@@ -84,10 +84,16 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         opacity = object.opacity ? object.opacity : 65;
         angle = object.angle ? object.angle : 0;
         floorplan_holder = turf.polygon([[c[0], c[1], c[2], c[3], c[0]]]);
-        floorplan_holder_org = turf.polygon([[ne_corner.geometry.coordinates, nw_corner.geometry.coordinates, sw_corner.geometry.coordinates, se_corner.geometry.coordinates, ne_corner.geometry.coordinates]]);
-        floorplan_holder_org = turf.transformScale(floorplan_holder_org, 0.75); // non scaled and non rotated but variable position
-        floorplan_holder_scaled = turf.transformScale(floorplan_holder_org, object.scale/100); // keep original angle but variable scale and position
-        floorplan_holder_rotated = turf.transformRotate(floorplan_holder_org, object.angle); // keep original scale but variable angle and position
+        if (object.center) {
+          floorplan_holder_org = turf.polygon([[ne_corner.geometry.coordinates, nw_corner.geometry.coordinates, sw_corner.geometry.coordinates, se_corner.geometry.coordinates, ne_corner.geometry.coordinates]]);
+          floorplan_holder_org = turf.transformScale(floorplan_holder_org, 0.75); // non scaled and non rotated but variable position
+          floorplan_holder_scaled = turf.transformScale(floorplan_holder_org, scale_ratio); // keep original angle but variable scale and position
+          floorplan_holder_rotated = turf.transformRotate(floorplan_holder_org, angle); // keep original scale but variable angle and position
+        } else {
+          floorplan_holder_scaled = angular.copy(floorplan_holder); // keep original angle but variable scale and position
+          floorplan_holder_rotated = angular.copy(floorplan_holder); // keep original scale but variable angle and position
+          floorplan_holder_org = angular.copy(floorplan_holder); // non scaled and non rotated but variable position
+        }
         center = turf.centroid(floorplan_holder).geometry.coordinates;
       } else {
         c = [ne_corner.geometry.coordinates, nw_corner.geometry.coordinates, sw_corner.geometry.coordinates, se_corner.geometry.coordinates];
