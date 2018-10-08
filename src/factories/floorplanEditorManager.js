@@ -395,7 +395,7 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
       });
 
       var register4 = scope.$on('width-change', function(args, floorplan) {
-        if (x_distance !== floorplan.width) {
+        if (!dragging && x_distance !== floorplan.width) {
           console.log('width-change');
           //scale_by_width(floorplan);
           var new_coordinates = scale_by_width(floorplan);

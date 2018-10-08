@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.27 2018-10-08
+*  angular-mapboxgl-directive 0.40.28 2018-10-08
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -1243,7 +1243,7 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
       });
 
       var register4 = scope.$on('width-change', function(args, floorplan) {
-        if (x_distance !== floorplan.width) {
+        if (!dragging && x_distance !== floorplan.width) {
           console.log('width-change');
           //scale_by_width(floorplan);
           var new_coordinates = scale_by_width(floorplan);
@@ -2919,10 +2919,10 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.27',
+	full: '0.40.28',
 	major: 0,
 	minor: 40,
-	patch: 27
+	patch: 28
 });
 
 angular.module('mapboxgl-directive').constant('mapboxglConstants', {
