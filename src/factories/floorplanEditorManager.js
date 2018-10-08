@@ -130,17 +130,6 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         floorplan_holder_org.geometry.coordinates[0][3]
       ];
 
-      $timeout(function() {
-        object.scale = object.scale ? object.scale : scale_ratio*100;
-        object.angle = angle;
-        object.opacity = opacity;
-        object.coordinates = c;
-        object.center = object.center ? object.center : {
-          lat: center[1],
-          lng: center[0]
-        };
-      });
-
       const options = {
         type: 'image',
         url: object.url,
@@ -199,6 +188,72 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
       //var geojsonSource = map.getSource('my-geojson');
       //var geojsonSource2 = map.getSource('my-geojson2');
 
+      //width and height points
+      var midpoint_x = turf.midpoint(c[2], c[3]);
+      var midpoint_y = turf.midpoint(c[1], c[2]);
+      var x_distance = turf.distance(c[2], c[3]) * 1000;
+      var y_distance = turf.distance(c[1], c[2]) * 1000;
+
+      map.addSource('midpoint_x_source', {
+        "type": "geojson",
+        "data": midpoint_x
+      });
+      map.addSource('midpoint_y_source', {
+        "type": "geojson",
+        "data": midpoint_y
+      });
+      map.addLayer({
+        "id": "midpoint_x_layer",
+        "type": "symbol",
+        "source": "midpoint_x_source",
+        "layout": {
+          "text-field": x_distance.toFixed(1) + 'm',
+          "text-font": ["Open Sans Bold"],
+          "text-size": 13,
+          "text-letter-spacing": 0.05,
+          "text-offset": [0, 1],
+          "text-rotate": angle
+        },
+        "paint": {
+          "text-color": "#202",
+          "text-halo-color": "#fff",
+          "text-halo-width": 2
+        },
+      });
+      map.addLayer({
+        "id": "midpoint_y_layer",
+        "type": "symbol",
+        "source": "midpoint_y_source",
+        "layout": {
+          "text-field": y_distance.toFixed(1) + 'm',
+          "text-font": ["Open Sans Bold"],
+          "text-size": 13,
+          "text-letter-spacing": 0.05,
+          "text-offset": [0, -1],
+          "text-rotate": 90 + angle
+        },
+        "paint": {
+          "text-color": "#202",
+          "text-halo-color": "#fff",
+          "text-halo-width": 2
+        },
+      });
+
+      var midpoint_x_source = map.getSource('midpoint_x_source');
+      var midpoint_y_source = map.getSource('midpoint_y_source');
+
+      $timeout(function() {
+        object.scale = object.scale ? object.scale : scale_ratio*100;
+        object.angle = angle;
+        object.opacity = opacity;
+        object.coordinates = c;
+        object.width = x_distance;
+        object.center = object.center ? object.center : {
+          lat: center[1],
+          lng: center[0]
+        };
+      });
+
       function move(e, floorplan) {
         const fresh = c.map(function(val){
           return e ?
@@ -243,7 +298,7 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         }
         var scale_by = e ?
           expanding ? 1+((distance/diagonal)*2) : 1-((distance/diagonal)*2) :
-          scale_ratio < floorplan.scale/100 ? floorplan.scale/100 : floorplan.scale/100;
+          floorplan.scale/100;
         $timeout(function() {
           object.scale = e ? (scale_ratio*scale_by)*100 : floorplan.scale;
         });
@@ -277,8 +332,45 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         };
       }
 
+      /*function scale_by_width(floorplan) {
+        const diagonal = turf.distance(c[0], c[2]); // diagonal distance of ne and sw corner points
+        const distance = (floorplan.width - x_distance) / 1000; // distance difference in kilometers calculated from "new distance - previous distance"
+        console.log(floorplan.width, x_distance, floorplan.width - x_distance, distance, distance/diagonal);
+        const scale_by = distance/diagonal;
+        $timeout(function() {
+          object.scale += scale_by*100;
+        });
+      }*/
+
+      function scale_by_width(floorplan) {
+        const difference_x = (floorplan.width - x_distance) / 1000; // distance difference in kilometers calculated from "new distance - previous distance";
+        const difference_y = difference_x * original_ratio;
+
+        var ne_corner = turf.destination(c[0], difference_x/2, -90 + object.angle).geometry.coordinates;
+        ne_corner = turf.destination(ne_corner, -1*(difference_y/2), -180 + object.angle).geometry.coordinates;
+        var nw_corner = turf.destination(c[1], difference_x/2, 90 + object.angle).geometry.coordinates;
+        nw_corner = turf.destination(nw_corner, -1*(difference_y/2), -180 + object.angle).geometry.coordinates;
+        var sw_corner = turf.destination(c[2], difference_x/2, 90 + object.angle).geometry.coordinates;
+        sw_corner = turf.destination(sw_corner, difference_y/2, 180 + object.angle).geometry.coordinates;
+        var se_corner = turf.destination(c[3], difference_x/2, -90 + object.angle).geometry.coordinates;
+        se_corner = turf.destination(se_corner, difference_y/2, 180 + object.angle).geometry.coordinates;
+
+        var ne_corner_scaled = turf.destination(c_scaled[0], difference_x/2, -90).geometry.coordinates;
+        ne_corner_scaled = turf.destination(ne_corner_scaled, -1*(difference_y/2), -180).geometry.coordinates;
+        var nw_corner_scaled = turf.destination(c_scaled[1], difference_x/2, 90).geometry.coordinates;
+        nw_corner_scaled = turf.destination(nw_corner_scaled, -1*(difference_y/2), -180).geometry.coordinates;
+        var sw_corner_scaled = turf.destination(c_scaled[2], difference_x/2, 90).geometry.coordinates;
+        sw_corner_scaled = turf.destination(sw_corner_scaled, difference_y/2, 180).geometry.coordinates;
+        var se_corner_scaled = turf.destination(c_scaled[3], difference_x/2, -90).geometry.coordinates;
+        se_corner_scaled = turf.destination(se_corner_scaled, difference_y/2, 180).geometry.coordinates;
+        return {
+          event: 'scale',
+          fresh: [ne_corner, nw_corner, sw_corner, se_corner],
+          scaled: [ne_corner_scaled, nw_corner_scaled, sw_corner_scaled, se_corner_scaled]
+        };
+      }
+
       var register = scope.$on('center-change', function(args, floorplan) {
-        console.log(dragging);
         if (!dragging) {
           console.log('center-change');
           var new_coordinates = move(null, floorplan);
@@ -286,13 +378,13 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         }
       });
 
-      var register2 = scope.$on('scale-change', function(args, floorplan) {
+      /*var register2 = scope.$on('scale-change', function(args, floorplan) {
         if (!dragging) {
           console.log('scale-change');
           var new_coordinates = scale(null, null, floorplan);
           applyChanges(new_coordinates);
         }
-      });
+      });*/
 
       var register3 = scope.$on('angle-change', function(args, floorplan) {
         if (!dragging) {
@@ -301,15 +393,28 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
           applyChanges(new_coordinates);
         }
       });
-      var register4 = scope.$on('opacity-change', function(args, floorplan) {
+
+      var register4 = scope.$on('width-change', function(args, floorplan) {
+        if (x_distance !== floorplan.width) {
+          console.log('width-change');
+          //scale_by_width(floorplan);
+          var new_coordinates = scale_by_width(floorplan);
+          applyChanges(new_coordinates);
+        }
+      });
+
+
+      var register5 = scope.$on('opacity-change', function(args, floorplan) {
         map.setPaintProperty(id, 'raster-opacity', floorplan.opacity/100);
         opacity = floorplan.opacity;
       });
+
       scope.$on('$destroy', function(){
         register();
-        register2();
+        //register2();
         register3();
         register4();
+        register5();
       });
 
       function applyChanges(new_coordinates) {
@@ -320,6 +425,16 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
               marker.setLngLat(new_coordinates.fresh[key-1]);
             }
           });
+          midpoint_x = turf.midpoint(new_coordinates.fresh[2], new_coordinates.fresh[3]);
+          midpoint_y = turf.midpoint(new_coordinates.fresh[1], new_coordinates.fresh[2]);
+          x_distance = turf.distance(new_coordinates.fresh[2], new_coordinates.fresh[3]) * 1000;
+          y_distance = turf.distance(new_coordinates.fresh[1], new_coordinates.fresh[2]) * 1000;
+          midpoint_x_source.setData(midpoint_x);
+          midpoint_y_source.setData(midpoint_y);
+          map.setLayoutProperty('midpoint_x_layer', 'text-field', x_distance.toFixed(1)+'m');
+          map.setLayoutProperty('midpoint_x_layer', 'text-rotate', object.angle);
+          map.setLayoutProperty('midpoint_y_layer', 'text-field', y_distance.toFixed(1)+'m');
+          map.setLayoutProperty('midpoint_y_layer', 'text-rotate', 90 + object.angle);
           c = new_coordinates.fresh;
           floorplan_holder = turf.polygon([[c[0], c[1], c[2], c[3], c[0]]]);
           if (new_coordinates.event === 'move') {
@@ -412,6 +527,19 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
               if (marker._element.id !== 'move-marker') {
                 marker.setLngLat(new_coordinates.fresh[key-1]);
               }
+            });
+            midpoint_x = turf.midpoint(new_coordinates.fresh[2], new_coordinates.fresh[3]);
+            midpoint_y = turf.midpoint(new_coordinates.fresh[1], new_coordinates.fresh[2]);
+            x_distance = turf.distance(new_coordinates.fresh[2], new_coordinates.fresh[3]) * 1000;
+            y_distance = turf.distance(new_coordinates.fresh[1], new_coordinates.fresh[2]) * 1000;
+            midpoint_x_source.setData(midpoint_x);
+            midpoint_y_source.setData(midpoint_y);
+            map.setLayoutProperty('midpoint_x_layer', 'text-field', x_distance.toFixed(1)+'m');
+            map.setLayoutProperty('midpoint_x_layer', 'text-rotate', object.angle);
+            map.setLayoutProperty('midpoint_y_layer', 'text-field', y_distance.toFixed(1)+'m');
+            map.setLayoutProperty('midpoint_y_layer', 'text-rotate', 90 + object.angle);
+            $timeout(function() {
+              object.width = x_distance;
             });
           }
         });

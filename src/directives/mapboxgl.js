@@ -132,6 +132,7 @@ angular.module('mapboxgl-directive', []).directive('mapboxgl', ['$q', 'Utils', '
 
     var initObject = {
       container: scope.mapboxglMapId,
+      glyphs: "http://fonts.openmaptiles.org/{fontstack}/{range}.pbf",
       style: scope.glStyle || mapboxglConstants.map.defaultStyle,
       center: mapboxglConstants.map.defaultCenter,
       zoom: angular.isDefined(scope.glZoom) && scope.glZoom !== null && angular.isDefined(scope.glZoom.value) && scope.glZoom.value !== null ? scope.glZoom.value : mapboxglConstants.map.defaultZoom,

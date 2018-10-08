@@ -39,6 +39,9 @@ angular.module('mapboxgl-directive').directive('glFloorplanEditor', ['FloorplanE
             if ((newVal[0] && oldVal[0]) && (newVal[0].angle && oldVal[0].angle) &&  newVal[0].angle !== oldVal[0].angle) {
               scope.$broadcast('angle-change', newVal[0]);
             }
+            if ((newVal[0] && oldVal[0]) && (newVal[0].width && oldVal[0].width) && newVal[0].width !== oldVal[0].width) {
+              scope.$broadcast('width-change', newVal[0]);
+            }
             if ((newVal[0] && oldVal[0]) && (newVal[0].opacity && oldVal[0].opacity) &&  newVal[0].opacity !== oldVal[0].opacity) {
               scope.$broadcast('opacity-change', newVal[0]);
             }
