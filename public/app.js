@@ -69,13 +69,28 @@
         "visible": true
       }*/
         {
+          "url": "https://api.proximi.fi/imageproxy?source=https://proximi.io/wp-content/uploads/2018/03/maria_ground.png",
+         "coordinates": [
+      [
+        24.9222393925309,
+        60.167483022995505
+      ],
+      [
+        24.922055291914116,
+        60.166506473142164
+      ],
+      [
+        24.921202451520006,
+        60.166514848887076
+      ],
+      [
+        24.92122025524505,
+        60.16749147064184
+      ]
+    ],
+        }
+        /*{
           "url": "https://api.proximi.fi/imageproxy?source=https://www.roomsketcher.com/wp-content/uploads/2014/08/RoomSketcher-2D-Floor-Plan-Letterhead.jpg",
-          "editable": true,
-          "visible": true,
-          "id": "36e534ee-c79a-d4c4-42c0-6503d1ae6fe0",
-          "scale": 28.42669467833788,
-          "angle": -38.7663768227451,
-          "opacity": 65,
           "coordinates": [
             [
               17.82402637746617,
@@ -93,12 +108,8 @@
               17.82531585022042,
               48.6057726985373
             ]
-          ],
-          "center": {
-            "lng": 17.825741171821505,
-            "lat": 48.606871623440924
-          }
-        }];
+          ]
+        }*/];
 
       $scope.glLayerControls = [{
         type: 'glCircles',

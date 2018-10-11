@@ -22,6 +22,34 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
     return { width: srcWidth*ratio, height: srcHeight*ratio, ratio: srcHeight/srcWidth };
   }
 
+  function getRotation(coords) {
+    // Get center as average of top left and bottom right
+    var center = [(coords[0] + coords[4]) / 2,
+                  (coords[1] + coords[5]) / 2];
+
+    // Get differences top left minus bottom left
+    var diffs = [coords[0] - coords[6], coords[1] - coords[7]];
+
+    // Get rotation in degrees
+    var rotation = Math.atan(diffs[0]/diffs[1]) * 180 / Math.PI;
+
+    // Adjust for 2nd & 3rd quadrants, i.e. diff y is -ve.
+    if (diffs[1] < 0) {
+      rotation = -90 - rotation;
+    // Adjust for 4th quadrant
+    // i.e. diff x is -ve, diff y is +ve
+    } else if (diffs[0] < 0) {
+      rotation = -1*(rotation) + 90;
+    } else {
+      rotation = 90 - rotation;
+    }
+    // return array of [[centerX, centerY], rotation];
+    return {
+      center: center,
+      angle: rotation
+    };
+  }
+
   FloorplanEditorManager.prototype.createFloorplanByObject = function (object, scope) {
     Utils.checkObjects([
       {
@@ -60,10 +88,10 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
 
       const image_height_km = distance*2;
       const image_width_km = (image_size.width / image_size.height) * image_height_km;
-      const ne_corner = turf.destination(to, image_width_km / 2, -90);
-      const nw_corner = turf.destination(ne_corner, image_width_km, 90);
-      const sw_corner = turf.destination(nw_corner, image_height_km, 180);
-      const se_corner = turf.destination(sw_corner, image_width_km, -90);
+      var ne_corner = turf.destination(to, image_width_km / 2, -90);
+      var nw_corner = turf.destination(ne_corner, image_width_km, 90);
+      var sw_corner = turf.destination(nw_corner, image_height_km, 180);
+      var se_corner = turf.destination(sw_corner, image_width_km, -90);
 
       var c,
         c_scaled,
@@ -90,11 +118,16 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
           floorplan_holder_scaled = turf.transformScale(floorplan_holder_org, scale_ratio); // keep original angle but variable scale and position
           floorplan_holder_rotated = turf.transformRotate(floorplan_holder_org, angle); // keep original scale but variable angle and position
         } else {
-          floorplan_holder = turf.polygon([[ne_corner.geometry.coordinates, nw_corner.geometry.coordinates, sw_corner.geometry.coordinates, se_corner.geometry.coordinates, ne_corner.geometry.coordinates]]);
-          floorplan_holder = turf.transformScale(floorplan_holder, 0.75); // non scaled and non rotated but variable position
-          floorplan_holder_scaled = angular.copy(floorplan_holder); // keep original angle but variable scale and position
+          var rotation = getRotation([ c[0][1], c[0][0], c[1][1], c[1][0], c[2][1], c[2][0], c[3][1], c[3][0] ]);
+          angle = rotation.angle;
+          ne_corner = c[0];
+          nw_corner = turf.destination(ne_corner, turf.distance(c[2], c[3]), 90 + angle).geometry.coordinates;
+          sw_corner = turf.destination(nw_corner, turf.distance(c[2], c[3]) * original_ratio, -180 + angle).geometry.coordinates;
+          se_corner = turf.destination(ne_corner, turf.distance(c[2], c[3]) * original_ratio, -180 + angle).geometry.coordinates;
+          floorplan_holder = turf.polygon([[ne_corner, nw_corner, sw_corner, se_corner, ne_corner]]);
+          floorplan_holder_scaled = turf.transformRotate(floorplan_holder, -1* (angle)); // keep original angle but variable scale and position
           floorplan_holder_rotated = angular.copy(floorplan_holder); // keep original scale but variable angle and position
-          floorplan_holder_org = angular.copy(floorplan_holder); // non scaled and non rotated but variable position
+          floorplan_holder_org = angular.copy(floorplan_holder_scaled); // non scaled and non rotated but variable position
           c = [floorplan_holder.geometry.coordinates[0][0], floorplan_holder.geometry.coordinates[0][1], floorplan_holder.geometry.coordinates[0][2], floorplan_holder.geometry.coordinates[0][3]];
         }
         center = turf.centroid(floorplan_holder).geometry.coordinates;
@@ -160,9 +193,9 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
       map.addSource('my-geojson2', {
           "type": "geojson",
           "data": floorplan_holder_rotated
-      });
+      });*/
 
-      map.addLayer({
+      /*map.addLayer({
           "id": "geojsonLayer",
           "type": "fill",
           "source": "my-geojson",
@@ -170,8 +203,8 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
             "fill-color": "#000fff",
             "fill-opacity": 0.65
           }
-      });
-      map.addLayer({
+      });*/
+      /*map.addLayer({
           "id": "geojsonLayer2",
           "type": "fill",
           "source": "my-geojson2",
@@ -473,19 +506,19 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         position: [center[0], center[1]]
       }, {
         type: 'rotate-marker-ne',
-        icon: 'rotate-marker',
+        icon: 'rotate-marker-c1',
         position: floorplan_holder.geometry.coordinates[0][0]
       }, {
         type: 'scale-marker-nw',
-        icon: 'scale-marker',
+        icon: 'scale-marker-c2',
         position: floorplan_holder.geometry.coordinates[0][1]
       }, {
         type: 'rotate-marker-sw',
-        icon: 'rotate-marker',
+        icon: 'rotate-marker-c3',
         position: floorplan_holder.geometry.coordinates[0][2]
       }, {
         type: 'scale-marker-se',
-        icon: 'scale-marker',
+        icon: 'scale-marker-c4',
         position: floorplan_holder.geometry.coordinates[0][3]
       }];
 
@@ -493,7 +526,7 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         var el = document.createElement('div');
         el.id = marker.type;
         el.className = 'marker ' + marker.type;
-        el.style.backgroundImage = 'url(https://proximi.io/wp-content/uploads/2018/09/'+marker.icon+'.png)';//'url(lib/images/'+marker.icon+'.png)';
+        el.style.backgroundImage = marker.icon === 'move-marker' ? 'url(https://proximi.io/wp-content/uploads/2018/09/'+marker.icon+'.png)' : 'url(https://proximi.io/wp-content/uploads/2018/10/'+marker.icon+'.png)';//'url(lib/images/'+marker.icon+'.png)';
         el.style.width = '32px';
         el.style.height = '32px';
 
@@ -519,9 +552,9 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
           dragging = true;
           if (marker.type === 'move-marker') {
             new_coordinates = move(e);
-          } else if (marker.icon === 'scale-marker') {
+          } else if (marker.icon === 'scale-marker-c2' || marker.icon === 'scale-marker-c4') {
             new_coordinates = scale(e, startPosition);
-          } else if (marker.icon === 'rotate-marker') {
+          } else if (marker.icon === 'rotate-marker-c1' || marker.icon === 'rotate-marker-c3') {
             new_coordinates = rotate(e, startPosition);
           }
           if (new_coordinates.fresh) {
@@ -568,7 +601,7 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
             c_rotated = new_coordinates.rotated ? new_coordinates.rotated : c_rotated;
             floorplan_holder_rotated = turf.polygon([[c_rotated[0], c_rotated[1], c_rotated[2], c_rotated[3], c_rotated[0]]]);
           }
-          //geojsonSource.setData(floorplan_holder_scaled);
+          //geojsonSource.setData(floorplan_holder_rotated);
           //geojsonSource2.setData(floorplan_holder_rotated);
           scale_ratio = object.scale/100;
           angle = object.angle;
