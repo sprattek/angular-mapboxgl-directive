@@ -406,13 +406,15 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         };
       }
 
-      var register = scope.$on('center-change', function(args, floorplan) {
-        if (!dragging) {
-          console.log('center-change');
-          var new_coordinates = move(null, floorplan);
-          applyChanges(new_coordinates);
-        }
-      });
+      if (!scope.$$listeners['center-change']) {
+        var register = scope.$on('center-change', function(args, floorplan) {
+          if (!dragging) {
+            console.log('center-change');
+            var new_coordinates = move(null, floorplan);
+            applyChanges(new_coordinates);
+          }
+        });
+      }
 
       /*var register2 = scope.$on('scale-change', function(args, floorplan) {
         if (!dragging) {
@@ -422,28 +424,33 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         }
       });*/
 
-      var register3 = scope.$on('angle-change', function(args, floorplan) {
-        if (!dragging) {
-          console.log('angle-change');
-          var new_coordinates = rotate(null, null, floorplan);
-          applyChanges(new_coordinates);
-        }
-      });
+      if (!scope.$$listeners['angle-change']) {
+        var register3 = scope.$on('angle-change', function (args, floorplan) {
+          if (!dragging) {
+            console.log('angle-change');
+            var new_coordinates = rotate(null, null, floorplan);
+            applyChanges(new_coordinates);
+          }
+        });
+      }
 
-      var register4 = scope.$on('width-change', function(args, floorplan) {
-        if (!dragging && x_distance !== floorplan.width) {
-          console.log('width-change');
-          //scale_by_width(floorplan);
-          var new_coordinates = scale_by_width(floorplan);
-          applyChanges(new_coordinates);
-        }
-      });
+      if (!scope.$$listeners['width-change']) {
+        var register4 = scope.$on('width-change', function (args, floorplan) {
+          if (!dragging && x_distance !== floorplan.width) {
+            console.log('width-change');
+            //scale_by_width(floorplan);
+            var new_coordinates = scale_by_width(floorplan);
+            applyChanges(new_coordinates);
+          }
+        });
+      }
 
-
-      var register5 = scope.$on('opacity-change', function(args, floorplan) {
-        map.setPaintProperty(id, 'raster-opacity', floorplan.opacity/100);
-        opacity = floorplan.opacity;
-      });
+      if (!scope.$$listeners['opacity-change']) {
+        var register5 = scope.$on('opacity-change', function (args, floorplan) {
+          map.setPaintProperty(id, 'raster-opacity', floorplan.opacity / 100);
+          opacity = floorplan.opacity;
+        });
+      }
 
       scope.$on('$destroy', function(){
         register();
@@ -617,7 +624,7 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
 
   };
 
-  FloorplanEditorManager.prototype.removeAllFloorplansCreated = function () {
+  FloorplanEditorManager.prototype.removeAllFloorplansCreated = function (scope) {
     this.floorplansCreated.map(function (eachFloorplan) {
       if (eachFloorplan.mapInstance.getLayer(eachFloorplan.id)) {
         eachFloorplan.mapInstance.removeLayer(eachFloorplan.id);
@@ -632,6 +639,10 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         marker.remove();
       });
     }
+    if (this.mapInstance.getLayer('midpoint_x_layer')) this.mapInstance.removeLayer('midpoint_x_layer');
+    if (this.mapInstance.getLayer('midpoint_y_layer')) this.mapInstance.removeLayer('midpoint_y_layer');
+    if (this.mapInstance.getSource('midpoint_x_source')) this.mapInstance.removeSource('midpoint_x_source');
+    if (this.mapInstance.getSource('midpoint_y_source')) this.mapInstance.removeSource('midpoint_y_source');
 
     this.floorplansCreated = [];
     this.markersCreated = [];

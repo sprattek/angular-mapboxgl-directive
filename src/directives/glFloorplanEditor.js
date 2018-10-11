@@ -8,7 +8,7 @@ angular.module('mapboxgl-directive').directive('glFloorplanEditor', ['FloorplanE
 
     var floorplansWatched = function (floorplans, mapboxglDrawInstance) {
       if (angular.isDefined(floorplans) && scope.floorplanEditorManager) {
-        scope.floorplanEditorManager.removeAllFloorplansCreated();
+        scope.floorplanEditorManager.removeAllFloorplansCreated(scope);
 
         if (Object.prototype.toString.call(floorplans) === Object.prototype.toString.call({})) {
           scope.floorplanEditorManager.createFloorplanByObject(floorplans, scope);

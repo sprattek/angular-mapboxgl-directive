@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
-*  angular-mapboxgl-directive 0.40.30 2018-10-11
+*  angular-mapboxgl-directive 0.40.31 2018-10-11
 *  An AngularJS directive for Mapbox GL
 *  git: git+https://github.com/Naimikan/angular-mapboxgl-directive.git
 */
@@ -1254,13 +1254,15 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         };
       }
 
-      var register = scope.$on('center-change', function(args, floorplan) {
-        if (!dragging) {
-          console.log('center-change');
-          var new_coordinates = move(null, floorplan);
-          applyChanges(new_coordinates);
-        }
-      });
+      if (!scope.$$listeners['center-change']) {
+        var register = scope.$on('center-change', function(args, floorplan) {
+          if (!dragging) {
+            console.log('center-change');
+            var new_coordinates = move(null, floorplan);
+            applyChanges(new_coordinates);
+          }
+        });
+      }
 
       /*var register2 = scope.$on('scale-change', function(args, floorplan) {
         if (!dragging) {
@@ -1270,28 +1272,33 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         }
       });*/
 
-      var register3 = scope.$on('angle-change', function(args, floorplan) {
-        if (!dragging) {
-          console.log('angle-change');
-          var new_coordinates = rotate(null, null, floorplan);
-          applyChanges(new_coordinates);
-        }
-      });
+      if (!scope.$$listeners['angle-change']) {
+        var register3 = scope.$on('angle-change', function (args, floorplan) {
+          if (!dragging) {
+            console.log('angle-change');
+            var new_coordinates = rotate(null, null, floorplan);
+            applyChanges(new_coordinates);
+          }
+        });
+      }
 
-      var register4 = scope.$on('width-change', function(args, floorplan) {
-        if (!dragging && x_distance !== floorplan.width) {
-          console.log('width-change');
-          //scale_by_width(floorplan);
-          var new_coordinates = scale_by_width(floorplan);
-          applyChanges(new_coordinates);
-        }
-      });
+      if (!scope.$$listeners['width-change']) {
+        var register4 = scope.$on('width-change', function (args, floorplan) {
+          if (!dragging && x_distance !== floorplan.width) {
+            console.log('width-change');
+            //scale_by_width(floorplan);
+            var new_coordinates = scale_by_width(floorplan);
+            applyChanges(new_coordinates);
+          }
+        });
+      }
 
-
-      var register5 = scope.$on('opacity-change', function(args, floorplan) {
-        map.setPaintProperty(id, 'raster-opacity', floorplan.opacity/100);
-        opacity = floorplan.opacity;
-      });
+      if (!scope.$$listeners['opacity-change']) {
+        var register5 = scope.$on('opacity-change', function (args, floorplan) {
+          map.setPaintProperty(id, 'raster-opacity', floorplan.opacity / 100);
+          opacity = floorplan.opacity;
+        });
+      }
 
       scope.$on('$destroy', function(){
         register();
@@ -1465,7 +1472,7 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
 
   };
 
-  FloorplanEditorManager.prototype.removeAllFloorplansCreated = function () {
+  FloorplanEditorManager.prototype.removeAllFloorplansCreated = function (scope) {
     this.floorplansCreated.map(function (eachFloorplan) {
       if (eachFloorplan.mapInstance.getLayer(eachFloorplan.id)) {
         eachFloorplan.mapInstance.removeLayer(eachFloorplan.id);
@@ -1480,6 +1487,10 @@ angular.module('mapboxgl-directive').factory('FloorplanEditorManager', ['Utils',
         marker.remove();
       });
     }
+    if (this.mapInstance.getLayer('midpoint_x_layer')) this.mapInstance.removeLayer('midpoint_x_layer');
+    if (this.mapInstance.getLayer('midpoint_y_layer')) this.mapInstance.removeLayer('midpoint_y_layer');
+    if (this.mapInstance.getSource('midpoint_x_source')) this.mapInstance.removeSource('midpoint_x_source');
+    if (this.mapInstance.getSource('midpoint_y_source')) this.mapInstance.removeSource('midpoint_y_source');
 
     this.floorplansCreated = [];
     this.markersCreated = [];
@@ -2955,10 +2966,10 @@ angular.module('mapboxgl-directive').factory('Utils', ['$window', '$q', function
 }]);
 
 angular.module('mapboxgl-directive').constant('version', {
-	full: '0.40.30',
+	full: '0.40.31',
 	major: 0,
 	minor: 40,
-	patch: 30
+	patch: 31
 });
 
 angular.module('mapboxgl-directive').constant('mapboxglConstants', {
@@ -3515,7 +3526,7 @@ angular.module('mapboxgl-directive').directive('glFloorplanEditor', ['FloorplanE
 
     var floorplansWatched = function (floorplans, mapboxglDrawInstance) {
       if (angular.isDefined(floorplans) && scope.floorplanEditorManager) {
-        scope.floorplanEditorManager.removeAllFloorplansCreated();
+        scope.floorplanEditorManager.removeAllFloorplansCreated(scope);
 
         if (Object.prototype.toString.call(floorplans) === Object.prototype.toString.call({})) {
           scope.floorplanEditorManager.createFloorplanByObject(floorplans, scope);
